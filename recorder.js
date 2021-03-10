@@ -1,8 +1,5 @@
 
 
-// document.getElementById("stop").addEventListener("click", function(){console.log("BARF")});
-
-
 navigator.mediaDevices.getUserMedia({ audio: true })
 .then(stream => {
   const mediaRecorder = new MediaRecorder(stream);
@@ -15,8 +12,6 @@ navigator.mediaDevices.getUserMedia({ audio: true })
     audioChunks.push(event.data);
   });
 
-
-
   mediaRecorder.addEventListener("stop", () => {
     const audioBlob = new Blob(audioChunks);
     const audioUrl = URL.createObjectURL(audioBlob);
@@ -25,12 +20,6 @@ navigator.mediaDevices.getUserMedia({ audio: true })
   });
 
   document.getElementById("stop").addEventListener("click", function(){mediaRecorder.stop()});
-//   mediaRecorder.stop()
-
-    // setTimeout(() => {
-    //     mediaRecorder.stop();
-    // }, 1000);
-
 });
 
 
