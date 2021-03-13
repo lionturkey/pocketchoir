@@ -18,6 +18,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
     // var node = document.getElementById('ziqi');
     // node.innerHTML = '<p>HELLO ZIQI!!!</p>';
     audioChunks.length = 0;
+    playSomething();
     mediaRecorder.start();
   });
 
@@ -37,6 +38,11 @@ navigator.mediaDevices.getUserMedia({ audio: true })
   document.getElementById("play").addEventListener("click", function(){
     // helper function to only play selected audio
     playSomething();
+  });
+
+  document.getElementById("merge").addEventListener("click", function(){
+    // helper function to only play selected audio
+    mergeSomething();
   });
 
   // processes recorded data after recording is stopped
@@ -68,6 +74,19 @@ function checkboxManager(){
 
 // helper function to only play selected audio
 function playSomething(){
+  for (i = 0; i < audioChunksArray.length; ++i){
+    var idname = "box" + i;
+
+    // only process (play) checked items
+    if (document.getElementById(idname).checked){
+      // converts the (array of audio data) audiochunks -> blob -> url -> arrayBuffer -> audioBuffer
+      process(audioChunksArray[i]);
+    }
+  }
+}
+
+// helper function to only play selected audio
+function mergeSomething(){
   for (i = 0; i < audioChunksArray.length; ++i){
     var idname = "box" + i;
 
@@ -113,4 +132,35 @@ function play(audioBuffer) {
   sourceNode.start();
 }
 
+
+
+mergeAudio(buffers) {
+  const output = audioContext.createBuffer(
+    this._maxNumberOfChannels(buffers),
+    this._sampleRate * this._maxDuration(buffers),
+    this._sampleRate
+  );
+
+  buffers.forEach((buffer) => {
+    for (
+      let channelNumber = 0;
+      channelNumber < buffer.numberOfChannels;
+      channelNumber += 1
+    ) {
+      const outputData = output.getChannelData(channelNumber);
+      const bufferData = buffer.getChannelData(channelNumber);
+
+      for (
+        let i = buffer.getChannelData(channelNumber).length - 1;
+        i >= 0;
+        i -= 1
+      ) {
+        outputData[i] += bufferData[i];
+      }
+
+      output.getChannelData(channelNumber).set(outputData);
+    }
+  });
+  return output;
+}
 
