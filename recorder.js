@@ -4,17 +4,19 @@ const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 // So we can story multiple recordings
 const audioChunksArray = [];
+const audioBufferArray = [];
+const sampleRate = 44100;
 
 // This sets up an audio stream from the user's system so we can then process/record it
 navigator.mediaDevices.getUserMedia({ audio: true })
-.then(stream => {
+.then(async stream => {
   const mediaRecorder = new MediaRecorder(stream);
 
   // creates an array to store chunks of sequential audio data
   const audioChunks = [];
 
   // links the start button in the html file to start recording
-  document.getElementById("start").addEventListener("click", function(){
+  document.getElementById("start").addEventListener("click", function() {
     // var node = document.getElementById('ziqi');
     // node.innerHTML = '<p>HELLO ZIQI!!!</p>';
     audioChunks.length = 0;
@@ -28,19 +30,19 @@ navigator.mediaDevices.getUserMedia({ audio: true })
   });
 
   // links the stop button in the html file to stop recording
-  document.getElementById("stop").addEventListener("click", function(){
+  document.getElementById("stop").addEventListener("click", function() {
     // var node = document.getElementById('ziqi');
     // node.innerHTML = '<p>BYE ZIQI!!!</p>';
     mediaRecorder.stop();
   });
 
   // links the play button in the html file to play selected clips
-  document.getElementById("play").addEventListener("click", function(){
+  document.getElementById("play").addEventListener("click", function() {
     // helper function to only play selected audio
     playSomething();
   });
 
-  document.getElementById("merge").addEventListener("click", function(){
+  document.getElementById("merge").addEventListener("click", function() {
     // helper function to only play selected audio
     mergeSomething();
   });
@@ -53,60 +55,82 @@ navigator.mediaDevices.getUserMedia({ audio: true })
     // const audio = new Audio(audioUrl);
 
     // Add the current recording to the overall recording list
+    addAudioBuffer([...audioChunks]);
     // Note the shallow copy! [...array]
-    audioChunksArray.push([...audioChunks]);
-
-    // update the checkboxes in the html document
-    checkboxManager();
+    // audioChunksArray.push([...audioChunks]);
+    // process([...audioChunks])
+    //   .then(audioBufferArray.push)
+    console.log(audioBufferArray);
+    // // audioBufferArray.push(await process([...audioChunks]));
 
   });
 });
 
 // update the checkboxes in the html document
-function checkboxManager(){
+function checkboxManager() {
+  console.log('checkbox manager start\n');
+
   var text = "";
-  for (i = 0; i < audioChunksArray.length; ++i){
+  for (i = 0; i < audioBufferArray.length; ++i){
     text += "<input type=\"checkbox\" id=\"box" + i + "\" name=\"z\" value=\"" + i + "\"><br>";
   }
   var node = document.getElementById('recordlist');
   node.innerHTML = text;
+  console.log('audioBufferArray.length:');
+  console.log(audioBufferArray.length);
 }
 
 // helper function to only play selected audio
-function playSomething(){
-  for (i = 0; i < audioChunksArray.length; ++i){
+function playSomething() {
+  for (i = 0; i < audioBufferArray.length; ++i){
     var idname = "box" + i;
 
     // only process (play) checked items
     if (document.getElementById(idname).checked){
       // converts the (array of audio data) audiochunks -> blob -> url -> arrayBuffer -> audioBuffer
-      process(audioChunksArray[i]);
+      // process(audioChunksArray[i]);
+      play(audioBufferArray[i]);
     }
   }
 }
 
-// helper function to only play selected audio
-function mergeSomething(){
-  for (i = 0; i < audioChunksArray.length; ++i){
+// helper function to merge selected audio
+function mergeSomething() {
+  selectedBuffers = [];
+  for (i = 0; i < audioBufferArray.length; ++i){
     var idname = "box" + i;
-
+    
     // only process (play) checked items
     if (document.getElementById(idname).checked){
-      // converts the (array of audio data) audiochunks -> blob -> url -> arrayBuffer -> audioBuffer
-      process(audioChunksArray[i]);
+      console.log('i:')
+      console.log(i);
+      selectedBuffers.push(audioBufferArray[i]);
     }
   }
+
+  const mergedBuffer = mergeAudio(selectedBuffers);
+
+  // Add the merged recording to the overall recording list
+  audioBufferArray.push(mergedBuffer);
+
+  // update the checkboxes in the html document
+  checkboxManager();
 }
 
 // converts the (array of audio data) audiochunks -> blob -> url -> arrayBuffer -> audioBuffer 
-function process(data) {
+// and pushes into audioBufferArray
+function addAudioBuffer(data) {
   const blob = new Blob(data);
 
   console.log(blob)
+
+ //  return audioContext.decodeAudioData(convertToArrayBuffer(blob));
   
   convertToArrayBuffer(blob) // see function below
       .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
-      .then(play);
+      .then(audioBuffer => audioBufferArray.push(audioBuffer)) // push audioBuffer into the arr
+      .then(() => checkboxManager()); // update the checkboxes in the html document
+      // .then(play);
 }
 
 // makes a url for the blob, then fetches directly from the url and converts to an arraybuffer
@@ -134,11 +158,12 @@ function play(audioBuffer) {
 
 
 
-mergeAudio(buffers) {
+function mergeAudio(buffers) {
+  console.log(buffers);
   const output = audioContext.createBuffer(
-    this._maxNumberOfChannels(buffers),
-    this._sampleRate * this._maxDuration(buffers),
-    this._sampleRate
+    maxNumberOfChannels(buffers),
+    sampleRate * maxDuration(buffers),
+    sampleRate
   );
 
   buffers.forEach((buffer) => {
@@ -162,5 +187,19 @@ mergeAudio(buffers) {
     }
   });
   return output;
+}
+
+function maxDuration(buffers) {
+  return Math.max.apply(
+    Math,
+    buffers.map((buffer) => buffer.duration)
+  );
+}
+
+function maxNumberOfChannels(buffers) {
+  return Math.max.apply(
+    Math,
+    buffers.map((buffer) => buffer.numberOfChannels)
+  );
 }
 
