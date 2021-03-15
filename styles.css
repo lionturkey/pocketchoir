@@ -15,7 +15,7 @@ body, h1 {
 
 input[type='checkbox'] {
   -webkit-appearance:none;
-  width:30px;
+  width:200px;
   height:30px;
   background:white;
   border-radius:5px;
