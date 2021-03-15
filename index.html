@@ -3,20 +3,37 @@
 
 <head>
     <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PocketChoir</title>
 </head>
 
 <body>
 
+    <h1>PocketChoir</h1>
+    <div id="recordlist"></div>
 
-    <div><button type="button" id="start">Start</button></div>
-    <div><button type="button" id="stop">Stop</button></div>
-    <div><button type="button" id="play">Play</button></div>
-    <div><button type="button" id="merge">Merge</button></div>
-    <div><button type="button" id="delete">Delete</button></div>
-
-
-    <div id="recordlist">
+    <div id="control-panel">
+        <div id="row-1">
+            <button type="button" id="start">
+                <!-- <img id="u2_img" class="img " src="images/page_1/mic_u2.svg"/> -->
+                <img id="u1_img" class="img " src="images/page_1/mic_background_u1.svg"/>
+            </button>
+            <button type="button" id="stop">
+                <img id="u12_img" class="img " src="images/page_1/stop_u12.svg"/>
+            </button>
+        </div>
+        <div id="row-2">
+            <button type="button" id="delete">
+                <img id="u5_img" class="img " src="images/page_1/delete_u5.svg"/>
+            </button>
+            <button type="button" id="play">
+                <img id="u3_img" class="img " src="images/page_1/play_u3.svg"/>
+            </button>
+            <button type="button" id="download">
+                <img id="u6_img" class="img " src="images/page_1/download_u6.svg"/>
+            </button>
+        </div>
+        <div id="row-3"><button type="button" id="merge">Merge</button></div>
     </div>
 
 <script src="recorder.js"></script> 

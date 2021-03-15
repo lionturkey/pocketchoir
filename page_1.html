@@ -48,9 +48,20 @@
   <body>
     <div id="base" class="">
 
+      <!-- PocketChoir_title (Rectangle) -->
+      <div id="u4" class="ax_default heading_1" data-label="PocketChoir_title">
+        <div id="u4_div" class=""></div>
+        <div id="u4_text" class="text ">
+          <p><span>PocketChoir</span></p>
+        </div>
+      </div>
+
+      <div id="recordlist">
+      </div>
+
       <!-- start (Group) -->
       <div id="u0" class="ax_default" data-label="start" data-left="160" data-top="541" data-width="70" data-height="70">
-
+        <button id="start"></button>
         <!-- mic_background (Ellipse) -->
         <div id="u1" class="ax_default primary_button" data-label="mic_background">
           <img id="u1_img" class="img " src="images/page_1/mic_background_u1.svg"/>
@@ -70,22 +81,16 @@
 
       <!-- play (Shape) -->
       <div id="u3" class="ax_default icon" data-label="play">
+        <button id="play"></button>
         <img id="u3_img" class="img " src="images/page_1/play_u3.svg"/>
         <div id="u3_text" class="text " style="display:none; visibility: hidden">
           <p></p>
         </div>
       </div>
 
-      <!-- PocketChoir_title (Rectangle) -->
-      <div id="u4" class="ax_default heading_1" data-label="PocketChoir_title">
-        <div id="u4_div" class=""></div>
-        <div id="u4_text" class="text ">
-          <p><span>PocketChoir</span></p>
-        </div>
-      </div>
-
       <!-- delete (Shape) -->
       <div id="u5" class="ax_default icon" data-label="delete">
+        <button id="delete"></button>
         <img id="u5_img" class="img " src="images/page_1/delete_u5.svg"/>
         <div id="u5_text" class="text " style="display:none; visibility: hidden">
           <p></p>
@@ -102,6 +107,7 @@
 
       <!-- merge (Rectangle) -->
       <div id="u7" class="ax_default primary_button" data-label="merge">
+        <div id="merge"></div>
         <div id="u7_div" class=""></div>
         <div id="u7_text" class="text ">
           <p><span>Merge</span></p>
@@ -138,12 +144,16 @@
 
       <!-- stop (Shape) -->
       <div id="u12" class="ax_default icon" data-label="stop">
+        <button id="stop"></button>
         <img id="u12_img" class="img " src="images/page_1/stop_u12.svg"/>
         <div id="u12_text" class="text " style="display:none; visibility: hidden">
           <p></p>
         </div>
       </div>
     </div>
+
+    <script src="recorder.js"></script> 
     <script src="resources/scripts/axure/ios.js"></script>
+    
   </body>
 </html>

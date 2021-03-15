@@ -81,7 +81,7 @@ function checkboxManager() {
     
     var text = "";
     for (i = 0; i < audioBufferArray.length; ++i){
-        text += "<input type=\"checkbox\" id=\"box" + i + "\" name=\"z\" value=\"" + i + "\"><br>";
+        text += "<input type=\"checkbox\" class=\"clip\" id=\"box" + i + "\" name=\"z\" value=\"" + i + "\"><br>";
     }
     var node = document.getElementById('recordlist');
     node.innerHTML = text;
