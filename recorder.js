@@ -15,14 +15,22 @@ navigator.mediaDevices.getUserMedia({ audio: true })
     // creates an array to store chunks of sequential audio data
     const audioChunks = [];
     
+    // start with the stop recording button hidden
+    document.getElementById("stop").style.display = "none";
+
     // links the start button in the html file to start recording
     document.getElementById("start").addEventListener("click", function() {
         // var node = document.getElementById('ziqi');
         // node.innerHTML = '<p>HELLO ZIQI!!!</p>';
         audioChunks.length = 0;
+
+        // toggle button
+        document.getElementById("start").style.display = "none";
+        document.getElementById("stop").style.display = "inline";
         
         //TODO ?????????????????????????????????????????????????????????????????????????????????????????
         playSomething();
+        // setTimeout(playSomething(), 350)
         mediaRecorder.start();               
     });
     
@@ -35,6 +43,11 @@ navigator.mediaDevices.getUserMedia({ audio: true })
     document.getElementById("stop").addEventListener("click", function() {
         // var node = document.getElementById('ziqi');
         // node.innerHTML = '<p>BYE ZIQI!!!</p>';
+
+        // toggle button
+        document.getElementById("start").style.display = "inline";
+        document.getElementById("stop").style.display = "none";
+
         mediaRecorder.stop();
     });
     
