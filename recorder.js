@@ -23,15 +23,17 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         // var node = document.getElementById('ziqi');
         // node.innerHTML = '<p>HELLO ZIQI!!!</p>';
         audioChunks.length = 0;
+        
+        //TODO ?????????????????????????????????????????????????????????????????????????????????????????
+        // playSomething();
+        // setTimeout(play(buffMerger()), 2000)
+        play(buffMerger());
+        // mediaRecorder.start();
+        setTimeout(function(){mediaRecorder.start();}, 100);
 
         // toggle button
         document.getElementById("start").style.display = "none";
         document.getElementById("stop").style.display = "inline";
-        
-        //TODO ?????????????????????????????????????????????????????????????????????????????????????????
-        playSomething();
-        // setTimeout(playSomething(), 350)
-        mediaRecorder.start();               
     });
     
     // adds data to the array as it comes... but we don't really understand this
@@ -54,7 +56,8 @@ navigator.mediaDevices.getUserMedia({ audio: true })
     // links the play button in the html file to play selected clips
     document.getElementById("play").addEventListener("click", function() {
         // helper function to only play selected audio
-        playSomething();
+        // playSomething();
+        play(buffMerger())
     });
     
     document.getElementById("merge").addEventListener("click", function() {
@@ -102,22 +105,24 @@ function checkboxManager() {
     console.log(audioBufferArray.length);
 }
 
-// helper function to only play selected audio
-function playSomething() {
-    for (i = 0; i < audioBufferArray.length; ++i){
-        var idname = "box" + i;
-        
-        // only process (play) checked items
-        if (document.getElementById(idname).checked){
-            // converts the (array of audio data) audiochunks -> blob -> url -> arrayBuffer -> audioBuffer
-            // process(audioChunksArray[i]);
-            play(audioBufferArray[i]);
-        }
-    }
-}
+// // helper function to only play selected audio
+// function playSomething() {
+//     play(buffMerger())
+// }
 
 // helper function to merge selected audio
 function mergeSomething() {
+    
+    // Add the merged recording to the overall recording list
+    audioBufferArray.push(buffMerger());
+    
+    // update the checkboxes in the html document
+    checkboxManager();
+
+}
+
+// helper to the helpers of play and merge somethings
+function buffMerger(){
     selectedBuffers = [];
     for (i = 0; i < audioBufferArray.length; ++i){
         var idname = "box" + i;
@@ -129,21 +134,13 @@ function mergeSomething() {
             selectedBuffers.push(audioBufferArray[i]);
         }
     }
-    
     if (selectedBuffers.length > 0){
         const mergedBuffer = mergeAudio(selectedBuffers);
-        
-        // Add the merged recording to the overall recording list
-        audioBufferArray.push(mergedBuffer);
-        
-        // update the checkboxes in the html document
-        checkboxManager();
+        return mergedBuffer
     }
     else{
         console.log("u idiot");
     }
-    
-    
 }
 
 function deleteSomething() {
