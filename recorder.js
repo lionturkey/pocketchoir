@@ -8,7 +8,12 @@ const audioBufferArray = [];
 //const sampleRate = 48000;
 
 // This sets up an audio stream from the user's system so we can then process/record it
-navigator.mediaDevices.getUserMedia({ audio: true })
+navigator.mediaDevices.getUserMedia({ audio: {
+    // the below audio options prevent the recording from cutting in and out while there is playback
+    autoGainControl: false,
+    echoCancellation: false
+    // noiseSuppression: false
+} })
 .then(async stream => {
     const mediaRecorder = new MediaRecorder(stream);
     
@@ -135,8 +140,8 @@ function buffMerger(){
         }
     }
     if (selectedBuffers.length > 0){
-        const mergedBuffer = mergeAudio(selectedBuffers);
-        return mergedBuffer
+        // const mergedBuffer = mergeAudio(selectedBuffers);
+        return mergeAudio(selectedBuffers);
     }
     else{
         console.log("u idiot");
