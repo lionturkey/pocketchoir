@@ -13,6 +13,10 @@ body, h1 {
 .clip {
 }
 
+#stop {
+  display: none;
+}
+
 input[type='checkbox'] {
   -webkit-appearance:none;
   width:200px;

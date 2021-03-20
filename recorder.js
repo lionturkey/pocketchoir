@@ -127,7 +127,7 @@ function mergeSomething() {
 }
 
 // helper to the helpers of play and merge somethings
-function buffMerger(){
+function buffMerger() {
     selectedBuffers = [];
     for (i = 0; i < audioBufferArray.length; ++i){
         var idname = "box" + i;
@@ -139,11 +139,11 @@ function buffMerger(){
             selectedBuffers.push(audioBufferArray[i]);
         }
     }
-    if (selectedBuffers.length > 0){
+    if (selectedBuffers.length > 0) {
         // const mergedBuffer = mergeAudio(selectedBuffers);
         return mergeAudio(selectedBuffers);
     }
-    else{
+    else {
         console.log("u idiot");
     }
 }
