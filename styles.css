@@ -17,6 +17,10 @@ body, h1 {
   display: none;
 }
 
+#stop-playing {
+  display: none;
+}
+
 input[type='checkbox'] {
   -webkit-appearance:none;
   width:200px;

@@ -19,9 +19,12 @@ navigator.mediaDevices.getUserMedia({ audio: {
     
     // creates an array to store chunks of sequential audio data
     const audioChunks = [];
+    sourceNode = null;
     
     // start with the stop recording button hidden
     document.getElementById("stop").style.display = "none";
+    document.getElementById("stop-playing").style.display = "none";
+
 
     // links the start button in the html file to start recording
     document.getElementById("start").addEventListener("click", function() {
@@ -62,7 +65,19 @@ navigator.mediaDevices.getUserMedia({ audio: {
     document.getElementById("play").addEventListener("click", function() {
         // helper function to only play selected audio
         // playSomething();
-        play(buffMerger())
+        sourceNode = play(buffMerger());
+
+        // toggle button
+        document.getElementById("play").style.display = "none";
+        document.getElementById("stop-playing").style.display = "inline";
+    });
+    document.getElementById("stop-playing").addEventListener("click", function() {
+        // helper function to only stop playing audio
+        stopPlaying(sourceNode);
+
+        // toggle button
+        document.getElementById("play").style.display = "inline";
+        document.getElementById("stop-playing").style.display = "none";
     });
     
     document.getElementById("merge").addEventListener("click", function() {
@@ -231,32 +246,36 @@ function play(audioBuffer) {
     sourceNode.connect(audioContext.destination);
     // document.getElementById("play").addEventListener("click", function(){sourceNode.start()});
     sourceNode.start();
+    return sourceNode;
 }
 
-
+function stopPlaying(sourceNode) {
+    console.log('in stopplaying');
+    sourceNode.disconnect(audioContext.destination);
+}
 
 function mergeAudio(buffers) {
     console.log(buffers);
     const output = audioContext.createBuffer(
-                                             maxNumberOfChannels(buffers),
-                                             buffers[0].sampleRate * maxDuration(buffers),
-                                             buffers[0].sampleRate
-                                             );
+        maxNumberOfChannels(buffers),
+        buffers[0].sampleRate * maxDuration(buffers),
+        buffers[0].sampleRate
+    );
     
     buffers.forEach((buffer) => {
         for (
-             let channelNumber = 0;
-             channelNumber < buffer.numberOfChannels;
-             channelNumber += 1
-             ) {
+            let channelNumber = 0;
+            channelNumber < buffer.numberOfChannels;
+            channelNumber += 1
+        ) {
             const outputData = output.getChannelData(channelNumber);
             const bufferData = buffer.getChannelData(channelNumber);
             
             for (
-                 let i = buffer.getChannelData(channelNumber).length - 1;
-                 i >= 0;
-                 i -= 1
-                 ) {
+                let i = buffer.getChannelData(channelNumber).length - 1;
+                i >= 0;
+                i -= 1
+            ) {
                 outputData[i] += bufferData[i];
             }
             
@@ -268,16 +287,16 @@ function mergeAudio(buffers) {
 
 function maxDuration(buffers) {
     return Math.max.apply(
-                          Math,
-                          buffers.map((buffer) => buffer.duration)
-                          );
+        Math,
+        buffers.map((buffer) => buffer.duration)
+    );
 }
 
 function maxNumberOfChannels(buffers) {
     return Math.max.apply(
-                          Math,
-                          buffers.map((buffer) => buffer.numberOfChannels)
-                          );
+        Math,
+        buffers.map((buffer) => buffer.numberOfChannels)
+    );
 }
 
 function interleave(input) {
