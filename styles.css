@@ -1,4 +1,5 @@
 button {
+  -webkit-appearance:none;
   font-size: 400%;
   margin: 0px;
   background: none;
@@ -34,12 +35,14 @@ input[type='checkbox']:checked {
 }
 
 #recordlist {
+  -webkit-appearance:none;
   /* offset height of control panel and title */
   height: calc(100% - 233.33px - 79.54px);
   /* overflow-y: auto; */
 }
 
 #merge {
+  -webkit-appearance:none;
   border-width:0px;
   /* position:absolute;
   left:0px;
