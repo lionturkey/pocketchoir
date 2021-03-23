@@ -5,7 +5,7 @@ const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 // So we can story multiple recordings
 const audioChunksArray = [];
 const audioBufferArray = [];
-//const sampleRate = 48000;
+globalSampleRate = 0;
 
 // This sets up an audio stream from the user's system so we can then process/record it
 navigator.mediaDevices.getUserMedia({ audio: {
@@ -200,7 +200,7 @@ function myDownload(buffer, filename) {
     const recorded = interleave(buffer);
     const dataview = writeHeaders(recorded);
     const audioBlob = new Blob([dataview], { type: type });
-    const name = filename || "PochetChoir";
+    const name = filename || "PocketChoir";
     const a = document.createElement("a");
     a.style = "display: none";
     a.href = renderURL(audioBlob);
@@ -220,7 +220,9 @@ function addAudioBuffer(data) {
     
     convertToArrayBuffer(blob) // see function below
     .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
-    .then(audioBuffer => audioBufferArray.push(audioBuffer)) // push audioBuffer into the arr
+    .then(audioBuffer => {
+        globalSampleRate = audioBuffer.sampleRate;
+        audioBufferArray.push(audioBuffer)}) // push audioBuffer into the arr
     .then(() => checkboxManager()); // update the checkboxes in the html document
     // .then(play);
 }
@@ -325,8 +327,8 @@ function writeHeaders(buffer) {
     view.setUint32(16, 16, true);
     view.setUint16(20, 1, true);
     view.setUint16(22, 2, true);
-    view.setUint32(24, this._sampleRate, true);
-    view.setUint32(28, this._sampleRate * 4, true);
+    view.setUint32(24, globalSampleRate, true);
+    view.setUint32(28, globalSampleRate * 4, true);
     view.setUint16(32, 4, true);
     view.setUint16(34, 16, true);
     writeString(view, 36, "data");
