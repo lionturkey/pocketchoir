@@ -65,6 +65,8 @@ input[type='checkbox']:checked {
   position: absolute;
   bottom: 10px;
   left: calc(50% - 105.45px);
+  height: 213.33px;
+  width: 210.9px;
 }
 
 body {
