@@ -65,14 +65,8 @@ input[type='checkbox']:checked {
 #control-panel {
   -webkit-appearance:none;
   position: absolute;
-  bottom: 10px;
+  bottom: 15px;
   left: calc(50% - 105.45px);
-}
-
-#control-panel-2 {
-  -webkit-appearance:none;
-  /* position: absolute;
-  left: calc(50% - 105.45px); */
 }
 
 body {
