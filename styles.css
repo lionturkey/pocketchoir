@@ -2,6 +2,8 @@ button {
   -webkit-appearance:none;
   font-size: 400%;
   margin: 0px;
+  padding-left: 6px;
+  padding-right: 6px;
   background: none;
   border: none;
   cursor: pointer;
@@ -65,8 +67,6 @@ input[type='checkbox']:checked {
   position: absolute;
   bottom: 10px;
   left: calc(50% - 105.45px);
-  height: 213.33px;
-  width: 210.9px;
 }
 
 #control-panel-2 {
