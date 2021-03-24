@@ -35,7 +35,7 @@ navigator.mediaDevices.getUserMedia({ audio: {
         //TODO ?????????????????????????????????????????????????????????????????????????????????????????
         // playSomething();
         // setTimeout(play(buffMerger()), 2000)
-        play(buffMerger());
+        playSelected();
         // mediaRecorder.start();
         setTimeout(function(){mediaRecorder.start();}, 100);
 
@@ -65,7 +65,7 @@ navigator.mediaDevices.getUserMedia({ audio: {
     document.getElementById("play").addEventListener("click", function() {
         // helper function to only play selected audio
         // playSomething();
-        sourceNode = play(buffMerger());
+        sourceNode = playSelected();
 
         // toggle button
         document.getElementById("play").style.display = "none";
@@ -134,38 +134,59 @@ function checkboxManager() {
 //     play(buffMerger())
 // }
 
-// helper function to merge selected audio
-function mergeSomething() {
-    
-    // Add the merged recording to the overall recording list
-    audioBufferArray.push(buffMerger());
-    
-    // update the checkboxes in the html document
-    checkboxManager();
-
-}
-
-// helper to the helpers of play and merge somethings
-function buffMerger() {
+function getSelectedBuffers() {
     selectedBuffers = [];
-    for (i = 0; i < audioBufferArray.length; ++i){
+    for (i = 0; i < audioBufferArray.length; ++i) {
         var idname = "box" + i;
         
         // only process (play) checked items
         if (document.getElementById(idname).checked){
-            console.log('i:')
+            console.log('selected i:')
             console.log(i);
             selectedBuffers.push(audioBufferArray[i]);
         }
     }
+    return selectedBuffers;
+}
+
+// helper function to merge selected audio
+function mergeSomething() {
+    // Add the merged recording to the overall recording list
+    selectedBuffers = getSelectedBuffers();
     if (selectedBuffers.length > 0) {
         // const mergedBuffer = mergeAudio(selectedBuffers);
-        return mergeAudio(selectedBuffers);
+        audioBufferArray.push(mergeAudio(selectedBuffers));
+        
+        // update the checkboxes in the html document
+        checkboxManager();
     }
     else {
         console.log("u idiot");
     }
+
 }
+
+// // helper to the helpers of play and merge somethings
+// function buffMerger(selectedBuffers) {
+//     selectedBuffers = [];
+//     for (i = 0; i < audioBufferArray.length; ++i){
+//         var idname = "box" + i;
+        
+//         // only process (play) checked items
+//         if (document.getElementById(idname).checked){
+//             console.log('i:')
+//             console.log(i);
+//             selectedBuffers.push(audioBufferArray[i]);
+//         }
+//     }
+//     if (selectedBuffers.length > 0) {
+//         // const mergedBuffer = mergeAudio(selectedBuffers);
+//         return mergeAudio(selectedBuffers);
+//     }
+//     else {
+//         console.log("u idiot");
+//     }
+// }
 
 function deleteSomething() {
     // prevent the buffer array length from changing while deleting
@@ -238,6 +259,15 @@ function convertToArrayBuffer(blob) {
     });
 }
 
+function playSelected() {
+    selectedBuffers = getSelectedBuffers();
+    if (selectedBuffers.length > 0) {
+        return play(mergeAudio(selectedBuffers));
+    } else {
+        console.log("tried to play with nothing selected");
+    }
+}
+
 // we don't know what this buffer source is, but it works
 function play(audioBuffer) {
     const sourceNode = audioContext.createBufferSource();
@@ -253,7 +283,9 @@ function play(audioBuffer) {
 
 function stopPlaying(sourceNode) {
     console.log('in stopplaying');
-    sourceNode.disconnect(audioContext.destination);
+    if (sourceNode != null) {
+        sourceNode.disconnect(audioContext.destination);
+    }
 }
 
 function mergeAudio(buffers) {
