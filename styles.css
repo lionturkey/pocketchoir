@@ -69,7 +69,14 @@ input[type='checkbox']:checked {
   width: 210.9px;
 }
 
+#control-panel-2 {
+  -webkit-appearance:none;
+  /* position: absolute;
+  left: calc(50% - 105.45px); */
+}
+
 body {
-    text-align: center;
+  -webkit-appearance:none;
+  text-align: center;
 }
 
