@@ -37,7 +37,7 @@ navigator.mediaDevices.getUserMedia({ audio: {
         // setTimeout(play(buffMerger()), 2000)
         playSelected();
         // mediaRecorder.start();
-        setTimeout(function(){mediaRecorder.start();}, 30);
+        setTimeout(function(){mediaRecorder.start();}, 100);
 
         // toggle button
         document.getElementById("start").style.display = "none";
