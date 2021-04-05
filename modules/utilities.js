@@ -1,138 +1,6 @@
 
-// Creating AudioContext to make audio buffers possible later on
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-// So we can story multiple recordings
-const audioChunksArray = [];
-const audioBufferArray = [];
-globalSampleRate = 0;
-
-// This sets up an audio stream from the user's system so we can then process/record it
-navigator.mediaDevices.getUserMedia({ audio: {
-    // the below audio options prevent the recording from cutting in and out while there is playback
-    autoGainControl: false,
-    echoCancellation: false
-    // noiseSuppression: false
-} })
-.then(async stream => {
-    const mediaRecorder = new MediaRecorder(stream);
-    
-    // creates an array to store chunks of sequential audio data
-    const audioChunks = [];
-    sourceNode = null;
-    
-    // start with the stop recording button hidden
-    document.getElementById("stop").style.display = "none";
-    document.getElementById("stop-playing").style.display = "none";
 
 
-    // links the start button in the html file to start recording
-    document.getElementById("start").addEventListener("click", function() {
-        // var node = document.getElementById('ziqi');
-        // node.innerHTML = '<p>HELLO ZIQI!!!</p>';
-        audioChunks.length = 0;
-        
-        //TODO ?????????????????????????????????????????????????????????????????????????????????????????
-        // playSomething();
-        // setTimeout(play(buffMerger()), 2000)
-        playSelected();
-        // mediaRecorder.start();
-        setTimeout(function(){mediaRecorder.start();}, 100);
-
-        // toggle button
-        document.getElementById("start").style.display = "none";
-        document.getElementById("stop").style.display = "inline";
-    });
-    
-    // adds data to the array as it comes... but we don't really understand this
-    mediaRecorder.addEventListener("dataavailable", event => {
-        audioChunks.push(event.data);
-    });
-    
-    // links the stop button in the html file to stop recording
-    document.getElementById("stop").addEventListener("click", function() {
-        // var node = document.getElementById('ziqi');
-        // node.innerHTML = '<p>BYE ZIQI!!!</p>';
-
-        // toggle button
-        document.getElementById("start").style.display = "inline";
-        document.getElementById("stop").style.display = "none";
-
-        mediaRecorder.stop();
-    });
-    
-    // links the play button in the html file to play selected clips
-    document.getElementById("play").addEventListener("click", function() {
-        // helper function to only play selected audio
-        // playSomething();
-        sourceNode = playSelected();
-
-        // toggle button
-        document.getElementById("play").style.display = "none";
-        document.getElementById("stop-playing").style.display = "inline";
-    });
-    document.getElementById("stop-playing").addEventListener("click", function() {
-        // helper function to only stop playing audio
-        stopPlaying(sourceNode);
-
-        // toggle button
-        document.getElementById("play").style.display = "inline";
-        document.getElementById("stop-playing").style.display = "none";
-    });
-    
-    document.getElementById("merge").addEventListener("click", function() {
-        // helper function to only play selected audio
-        mergeSomething();
-    });
-    
-    document.getElementById("delete").addEventListener("click", function() {
-        // helper function to only play selected audio
-        deleteSomething();
-    });
-    
-    document.getElementById("download").addEventListener("click", function() {
-        // helper function to only play selected audio
-        downloadSomething();
-    });
-    
-    
-    // processes recorded data after recording is stopped
-    mediaRecorder.addEventListener("stop", () => {
-        // Original working for playback. Leaving just to show the method simpler than audioBuffer:
-        // const audioBlob = new Blob(audioChunks);
-        // const audioUrl = URL.createObjectURL(audioBlob);
-        // const audio = new Audio(audioUrl);
-        
-        // Add the current recording to the overall recording list
-        addAudioBuffer([...audioChunks]);
-        // Note the shallow copy! [...array]
-        // audioChunksArray.push([...audioChunks]);
-        // process([...audioChunks])
-        //   .then(audioBufferArray.push)
-        console.log(audioBufferArray);
-        // // audioBufferArray.push(await process([...audioChunks]));
-        
-    });
-});
-
-// update the checkboxes in the html document
-function checkboxManager() {
-    console.log('checkbox manager start\n');
-    
-    var text = "";
-    for (i = 0; i < audioBufferArray.length; ++i){
-        text += "<input type=\"checkbox\" class=\"clip\" id=\"box" + i + "\" name=\"z\" value=\"" + i + "\"><br>";
-    }
-    var node = document.getElementById('recordlist');
-    node.innerHTML = text;
-    console.log('audioBufferArray.length:');
-    console.log(audioBufferArray.length);
-}
-
-// // helper function to only play selected audio
-// function playSomething() {
-//     play(buffMerger())
-// }
 
 function getSelectedBuffers() {
     selectedBuffers = [];
@@ -166,27 +34,6 @@ function mergeSomething() {
 
 }
 
-// // helper to the helpers of play and merge somethings
-// function buffMerger(selectedBuffers) {
-//     selectedBuffers = [];
-//     for (i = 0; i < audioBufferArray.length; ++i){
-//         var idname = "box" + i;
-        
-//         // only process (play) checked items
-//         if (document.getElementById(idname).checked){
-//             console.log('i:')
-//             console.log(i);
-//             selectedBuffers.push(audioBufferArray[i]);
-//         }
-//     }
-//     if (selectedBuffers.length > 0) {
-//         // const mergedBuffer = mergeAudio(selectedBuffers);
-//         return mergeAudio(selectedBuffers);
-//     }
-//     else {
-//         console.log("u idiot");
-//     }
-// }
 
 function deleteSomething() {
     // prevent the buffer array length from changing while deleting
@@ -203,6 +50,7 @@ function deleteSomething() {
     }
     checkboxManager();
 }
+
 
 function downloadSomething() {
     // prevent the buffer array length from changing while deleting
@@ -281,12 +129,14 @@ function play(audioBuffer) {
     return sourceNode;
 }
 
+
 function stopPlaying(sourceNode) {
     console.log('in stopplaying');
     if (sourceNode != null) {
         sourceNode.disconnect(audioContext.destination);
     }
 }
+
 
 function mergeAudio(buffers) {
     console.log(buffers);
@@ -346,7 +196,7 @@ function interleave(input) {
       inputIndex++;
     }
     return result;
-  }
+}
 
 function writeHeaders(buffer) {
     let arrayBuffer = new ArrayBuffer(44 + buffer.length * 2),
