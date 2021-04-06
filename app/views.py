@@ -3,7 +3,8 @@ from flask import render_template, request, send_file, redirect, jsonify, make_r
 from flask_cors import CORS, cross_origin
 import os
 
-app.config['CORS_HEADERS'] = 'Content-Type'
+# app.config['CORS_HEADERS'] = 'Content-Type'
+# CORS(app)
 
 @app.route('/')
 def hello_world():
@@ -60,21 +61,44 @@ def upload_clip():
 
 
 # @app.route('/get-image/<string:name>/', method=["GET","POST"])
-@app.route('/get-image', methods=["POST"])
+@app.route('/get-image', methods=["GET"])
 @cross_origin(app)
 def get_image():
-    req = request.get_json()
-    print(req)
-    response = jsonify({'some': 'data'})
+    # req = request.get_json()
+    # print(req)
+    # response = jsonify({'some': 'data'})
     # response.headers.add('Access-Control-Allow-Origin', '*')
-
-    return response
-
-@app.route('/api/<string:projectName>')
-def get_blob(projectName):
-    p = os.path.join(app.config["clip_upload"], projectName)
+    p = os.path.join(app.config["clip_upload"], "upload-clip")
     print(p)
-    return send_from_directory(p, "clip_name", as_attachment=True)
+    return send_from_directory(p, "merge.png", as_attachment=False)
+
+@app.route('/get-image2', methods=["GET"])
+@cross_origin(app)
+def get_image2():
+    # req = request.get_json()
+    # print(req)
+    response = jsonify({'some': 'data'})
+    return response
+    # # response.headers.add('Access-Control-Allow-Origin', '*')
+    # p = os.path.join(app.config["clip_upload"], "upload-clip")
+    # print(p)
+    # return send_from_directory(p, "clip_name", as_attachment=False)
+
+# @app.route('/api/<string:projectName>', methods=["GET"])
+# @cross_origin(app)
+# def get_blob(projectName):
+#     p = os.path.join(app.config["clip_upload"], projectName)
+#     print(p)
+#     return send_from_directory(p, "clip_name", as_attachment=True)
+
+
+@app.route('/api', methods=["GET"])
+@cross_origin(app)
+def get_blob():
+    # p = os.path.join(app.config["clip_upload"], "upload-clip")
+    # print(p)
+    return send_from_directory(app.config["clip_upload"], "clip_name", as_attachment=False)
+    # return send_from_directory(app.config["clip_upload"], "clip_name", as_attachment=False)
 
 
 # @app.route('/get-image/<string:imageName>/', methods=['GET', 'POST'])

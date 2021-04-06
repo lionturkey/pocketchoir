@@ -198,14 +198,18 @@ function mergeSomething() {
 // }
 
 function initialLoad(){
-    var addr = serverAddr.concat('/').concat(project)
+    // var addr = serverAddr.concat('/').concat(project)
+    var addr = serverAddr
     fetch(addr, {
         method:"GET",
+        // mode:"no-cors"
     }).then(res => {
         if (!res.ok) throw Error(res.statusText);
+        console.log("b4 .blob");
+        console.log(res);
         return res.blob();})
         .then(newBlob => {
-            console.log(newBlob);
+            console.log(newBlob)
             convertToArrayBuffer(newBlob) // see function below
                 .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
                 .then(audioBuffer => {
