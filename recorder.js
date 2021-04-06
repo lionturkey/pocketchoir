@@ -3,9 +3,13 @@
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 // So we can story multiple recordings
-const audioChunksArray = [];
+// const audioChunksArray = [];
 const audioBufferArray = [];
 globalSampleRate = 0;
+const serverAddr = "http://127.0.0.1:5000/api";
+var project = "upload-clip";
+
+initialLoad()
 
 // This sets up an audio stream from the user's system so we can then process/record it
 navigator.mediaDevices.getUserMedia({ audio: {
@@ -95,6 +99,10 @@ navigator.mediaDevices.getUserMedia({ audio: {
         downloadSomething();
     });
     
+    // document.getElementById("sync").addEventListener("click", function() {
+    //     // helper function to only play selected audio
+    //     syncSomething();
+    // });
     
     // processes recorded data after recording is stopped
     mediaRecorder.addEventListener("stop", () => {
@@ -105,6 +113,7 @@ navigator.mediaDevices.getUserMedia({ audio: {
         
         // Add the current recording to the overall recording list
         addAudioBuffer([...audioChunks]);
+        
         // Note the shallow copy! [...array]
         // audioChunksArray.push([...audioChunks]);
         // process([...audioChunks])
@@ -188,6 +197,25 @@ function mergeSomething() {
 //     }
 // }
 
+function initialLoad(){
+    var addr = serverAddr.concat('/').concat(project)
+    fetch(addr, {
+        method:"GET",
+    }).then(res => {
+        if (!res.ok) throw Error(res.statusText);
+        return res.blob();})
+        .then(newBlob => {
+            console.log(newBlob);
+            convertToArrayBuffer(newBlob) // see function below
+                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
+                .then(audioBuffer => {
+                    audioBufferArray.push(audioBuffer);}) // push audioBuffer into the arr
+                .then(() => checkboxManager()); // update the checkboxes in the html document
+        })
+        .catch((error) => console.log(error));
+}
+
+
 function deleteSomething() {
     // prevent the buffer array length from changing while deleting
     var prevlength = audioBufferArray.length;
@@ -233,8 +261,17 @@ function myDownload(buffer, filename) {
 // converts the (array of audio data) audiochunks -> blob -> url -> arrayBuffer -> audioBuffer 
 // and pushes into audioBufferArray
 function addAudioBuffer(data) {
+    var addr = serverAddr.concat('/').concat(project);
     const blob = new Blob(data);
-    
+
+    const formData = new FormData();
+        formData.append("file", blob);
+        formData.append("name", "newClip");
+        fetch(addr, {
+            method:"POST",
+            body: formData
+        }).catch(console.error);
+
     console.log(blob)
     
     //  return audioContext.decodeAudioData(convertToArrayBuffer(blob));
@@ -243,7 +280,8 @@ function addAudioBuffer(data) {
     .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
     .then(audioBuffer => {
         globalSampleRate = audioBuffer.sampleRate;
-        audioBufferArray.push(audioBuffer)}) // push audioBuffer into the arr
+        audioBufferArray.push(audioBuffer);
+    }) // push audioBuffer into the arr
     .then(() => checkboxManager()); // update the checkboxes in the html document
     // .then(play);
 }
