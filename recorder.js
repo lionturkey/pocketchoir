@@ -197,7 +197,7 @@ function mergeSomething() {
 //     }
 // }
 
-function initialLoad(){
+function initialLoad() {
     // var addr = serverAddr.concat('/').concat(project)
     var addr = serverAddr
     fetch(addr, {
@@ -207,16 +207,18 @@ function initialLoad(){
         if (!res.ok) throw Error(res.statusText);
         console.log("b4 .blob");
         console.log(res);
-        return res.blob();})
-        .then(newBlob => {
-            console.log(newBlob)
-            convertToArrayBuffer(newBlob) // see function below
-                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
-                .then(audioBuffer => {
-                    audioBufferArray.push(audioBuffer);}) // push audioBuffer into the arr
-                .then(() => checkboxManager()); // update the checkboxes in the html document
-        })
-        .catch((error) => console.log(error));
+        return res.blob();
+    })
+    .then(newBlob => {
+        console.log(newBlob)
+        convertToArrayBuffer(newBlob) // see function below
+        .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
+        .then(audioBuffer => {
+            audioBufferArray.push(audioBuffer);
+        }) // push audioBuffer into the arr
+        .then(() => checkboxManager()); // update the checkboxes in the html document
+    })
+    .catch((error) => console.log(error));
 }
 
 
