@@ -6,9 +6,9 @@ import os
 # app.config['CORS_HEADERS'] = 'Content-Type'
 # CORS(app)
 
-app.config["clip_upload"] = "/Users/Michael_wang/Documents/UM_Winter_2021/EECS441/pocketchoir/app/Projects"
+app.config["clip_upload"] = "/Users/Michael_wang/Documents/UM_Winter_2021/EECS441/pocketchoir/app/projects"
 
-@app.route('/api/upload-clip', methods=["GET","POST"])
+@app.route('/api/upload-clip/', methods=["GET","POST"])
 @cross_origin(app)
 def upload_clip():
     print("ha")
@@ -28,7 +28,7 @@ def upload_clip():
             return {"test":1}
     return {"test":2}
 
-@app.route('/api', methods=["GET"])
+@app.route('/api/', methods=["GET"])
 @cross_origin(app)
 def get_blob():
     p = os.path.join(app.config["clip_upload"], "TammyProject")

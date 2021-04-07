@@ -6,8 +6,20 @@ const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 // const audioChunksArray = [];
 const audioBufferArray = [];
 globalSampleRate = 0;
+var username = '';
 const serverAddr = "http://127.0.0.1:5000/api";
 var project = "upload-clip";
+
+// start with project hidden
+document.getElementById("project").style.display = "none";
+
+document.getElementById("login-button").addEventListener("click", function() {
+    username = document.getElementById("username").value;
+    project = document.getElementById("projectName").value;
+    document.getElementById("login").style.display = "none";
+    document.getElementById("project").style.display = "inline";
+
+});
 
 initialLoad()
 
@@ -19,6 +31,7 @@ navigator.mediaDevices.getUserMedia({ audio: {
     // noiseSuppression: false
 } })
 .then(async stream => {
+
     const mediaRecorder = new MediaRecorder(stream);
     
     // creates an array to store chunks of sequential audio data
@@ -28,7 +41,6 @@ navigator.mediaDevices.getUserMedia({ audio: {
     // start with the stop recording button hidden
     document.getElementById("stop").style.display = "none";
     document.getElementById("stop-playing").style.display = "none";
-
 
     // links the start button in the html file to start recording
     document.getElementById("start").addEventListener("click", function() {
