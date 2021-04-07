@@ -7,22 +7,25 @@ const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const audioBufferArray = [];
 const audioNameArray = [];
 globalSampleRate = 0;
-var username = '';
+var username = 'Tammy';
 const serverAddr = "http://127.0.0.1:5000/api";
-var project = "TammyProject";
+// var project = "TammyProject";
+var project = "";
+
 
 // start with project hidden
 document.getElementById("project").style.display = "none";
 
 document.getElementById("login-button").addEventListener("click", function() {
-    username = document.getElementById("username").value;
-    project = document.getElementById("projectName").value;
+    // username = document.getElementById("username").value;
+    // project = document.getElementById("projectName").value;
     document.getElementById("login").style.display = "none";
     document.getElementById("project").style.display = "inline";
 
 });
 
-initialLoad()
+// initialLoad()
+// initialLoadStarter()
 
 // This sets up an audio stream from the user's system so we can then process/record it
 navigator.mediaDevices.getUserMedia({ audio: {
@@ -131,7 +134,7 @@ navigator.mediaDevices.getUserMedia({ audio: {
         // audioChunksArray.push([...audioChunks]);
         // process([...audioChunks])
         //   .then(audioBufferArray.push)
-        console.log(audioBufferArray);
+        // console.log(audioBufferArray);
         // // audioBufferArray.push(await process([...audioChunks]));
         
     });
@@ -139,7 +142,7 @@ navigator.mediaDevices.getUserMedia({ audio: {
 
 // update the checkboxes in the html document
 function checkboxManager() {
-    console.log('checkbox manager start\n');
+    // console.log('checkbox manager start\n');
     
     var text = "";
     for (i = 0; i < audioBufferArray.length; ++i){
@@ -147,8 +150,8 @@ function checkboxManager() {
     }
     var node = document.getElementById('recordlist');
     node.innerHTML = text;
-    console.log('audioBufferArray.length:');
-    console.log(audioBufferArray.length);
+    // console.log('audioBufferArray.length:');
+    // console.log(audioBufferArray.length);
 }
 
 // // helper function to only play selected audio
@@ -163,8 +166,8 @@ function getSelectedBuffers() {
         
         // only process (play) checked items
         if (document.getElementById(idname).checked){
-            console.log('selected i:')
-            console.log(i);
+            // console.log('selected i:')
+            // console.log(i);
             selectedBuffers.push(audioBufferArray[i]);
         }
     }
@@ -221,6 +224,8 @@ function deleteSomething() {
         // the count is an offest when you delete multiple at once
         if (document.getElementById(idname).checked){
             audioBufferArray.splice(i - count, 1);
+            var toBeRemoved = audioNameArray[i - count];
+            deleteClip(toBeRemoved);
             audioNameArray.splice(i - count, 1);
             count++;
         }
@@ -236,6 +241,10 @@ function downloadSomething() {
         // the count is an offest when you delete multiple at once
         if (document.getElementById(idname).checked){
             myDownload(audioBufferArray[i]);
+            var oldName = audioNameArray[i];
+            var newName = audioNameArray[i].concat("Downloaded");
+            renameClip(newName, oldName);
+            audioNameArray[i] = newName;
         }
     }
 }
@@ -259,7 +268,10 @@ function myDownload(buffer, filename) {
 function addAudioBuffer(data) {
     
     const blob = new Blob(data);
-    sendBlob2Server(blob);    
+    var blobName = nameGenerator();
+    console.log("cming name = ");
+    console.log(blobName);
+    sendBlob2Server(blob, blobName);    
     
     //  return audioContext.decodeAudioData(convertToArrayBuffer(blob));
     
@@ -309,14 +321,14 @@ function play(audioBuffer) {
 }
 
 function stopPlaying(sourceNode) {
-    console.log('in stopplaying');
+    // console.log('in stopplaying');
     if (sourceNode != null) {
         sourceNode.disconnect(audioContext.destination);
     }
 }
 
 function mergeAudio(buffers) {
-    console.log(buffers);
+    // console.log(buffers);
     const output = audioContext.createBuffer(
         maxNumberOfChannels(buffers),
         buffers[0].sampleRate * maxDuration(buffers),
@@ -416,7 +428,10 @@ function floatTo16BitPCM(dataview, buffer, offset) {
   }
 
 
-function initialLoad(){
+
+async function initialLoad(){
+    username = document.getElementById("username").value;
+    project = document.getElementById("projectName").value;
     console.log("trying to fetch project info")
     var addr = serverAddr.concat('/get-info/').concat(project);
     fetch(addr, {method:"GET"})
@@ -427,49 +442,165 @@ function initialLoad(){
             }
             return res.json();
         })
-        .then(data => {
-            console.log("info start")
+        .then(data =>{
+            console.log("info start");
             console.log(data);
             console.log("info stop");
-            for (i=0; i<data["amount"]-1; i--){
-                console.log("fetching");
-                console.log(data[parseInt[i]]);
-                fetchBlob(data[parseInt(i)]);
-            }
+            console.log("amount:");
+            console.log(data["amount"]);
+            load1by1(data);
         })
 }
+
+const load1by1 = async data => {
+    for (let i=0; i<data["amount"]; i++){
+        console.log("fetching");
+        console.log(data[parseInt(i)]);
+        const x = await fetchBlob(data[parseInt(i)]);
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        console.log(x);
+        audioNameArray.push(data[parseInt(i)]);
+        console.log("name array:");
+        console.log(audioNameArray);
+    }
+    console.log("done");
+}
+
+// !!!!!!!!! The original working init load, I want to keep it!!!!!!!!!!!!!
+// !!!!!!!!! The original working init load, I want to keep it!!!!!!!!!!!!!
+// !!!!!!!!! The original working init load, I want to keep it!!!!!!!!!!!!!
+// (soloway style ~)
+// function initialLoad(){
+//     username = document.getElementById("username").value;
+//     project = document.getElementById("projectName").value;
+//     console.log("trying to fetch project info")
+//     var addr = serverAddr.concat('/get-info/').concat(project);
+//     fetch(addr, {method:"GET"})
+//         .then(res => {
+//             if (res.status != 200){
+//                 console.log('fail to obtain project info');
+//                 return;
+//             }
+//             return res.json();
+//         })
+//         .then(data =>{
+//             console.log("info start");
+//             console.log(data);
+//             console.log("info stop");
+//             console.log("amount:");
+//             console.log(data["amount"]);
+//             for (i=0; i<data["amount"]; i++){
+//                 console.log("fetching");
+//                 console.log(data[parseInt(i)]);
+//                 fetchBlob(data[parseInt(i)]);
+//                 audioNameArray.push(data[parseInt(i)]);
+//                 console.log("name array:");
+//                 console.log(audioNameArray);
+//             }
+//         })
+// }
+
 
 function fetchBlob(name){
-    // var addr = serverAddr.concat('/').concat(project)
-    addr = serverAddr
-    fetch(addr, {
-        method:"GET"
-        // mode:"no-cors"
-    }).then(res => {
-        if (!res.ok) throw Error(res.statusText);
-        console.log("b4 .blob");
-        console.log(res);
-        return res.blob();})
-        .then(newBlob => {
-            console.log(newBlob)
-            convertToArrayBuffer(newBlob) // see function below
-                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
-                .then(audioBuffer => {
-                    audioBufferArray.push(audioBuffer);}) // push audioBuffer into the arr
-                .then(() => checkboxManager()); // update the checkboxes in the html document
-        })
-        .catch((error) => console.log(error));
+    return new Promise(
+        function(resolve, reject){
+
+        // var addr = serverAddr.concat('/').concat(project)
+        addr = serverAddr.concat("/get-blob/").concat(project).concat('/').concat(name);
+        fetch(addr, {
+            method:"GET"
+            // mode:"no-cors"
+        }).then(res => {
+            if (!res.ok) throw Error(res.statusText);
+            console.log("b4 .blob");
+            console.log(res);
+            return res.blob();})
+            .then(newBlob => {
+                console.log(newBlob)
+                convertToArrayBuffer(newBlob) // see function below
+                    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
+                    .then(audioBuffer => {
+                        audioBufferArray.push(audioBuffer);}) // push audioBuffer into the arr
+                    .then(() => {
+                        checkboxManager();
+                        resolve("ok");}); // update the checkboxes in the html document
+            })
+            .catch((error) => {
+                console.log(error);
+                reject("not ok");});
+        }
+    );
 }
 
-function sendBlob2Server(blob){
-    var addr = serverAddr.concat('/').concat(project);
+// !!!!!!!!!!!!Same story here, want to keep it!!!!!!!!!!!!!!
+
+// function fetchBlob(name){
+//         // var addr = serverAddr.concat('/').concat(project)
+//         addr = serverAddr.concat("/get-blob/").concat(project).concat('/').concat(name);
+//         fetch(addr, {
+//             method:"GET"
+//             // mode:"no-cors"
+//         }).then(res => {
+//             if (!res.ok) throw Error(res.statusText);
+//             console.log("b4 .blob");
+//             console.log(res);
+//             return res.blob();})
+//             .then(newBlob => {
+//                 console.log(newBlob)
+//                 convertToArrayBuffer(newBlob) // see function below
+//                     .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
+//                     .then(audioBuffer => {
+//                         audioBufferArray.push(audioBuffer);}) // push audioBuffer into the arr
+//                     .then(() => {
+//                         checkboxManager()}); // update the checkboxes in the html document
+//             })
+//             .catch((error) => {
+//                 console.log(error)});
+// }
+
+
+function sendBlob2Server(blob, blobName){
+    var addr = serverAddr.concat('/upload-clip/').concat(project);
     const formData = new FormData();
-    formData.append("file", blob);
-    // formData.append("cname", "newClip");
+    formData.append("myBlob", blob, blobName);
+    console.log("uploading...");
     fetch(addr, {
         method:"POST",
         body: formData
     }).catch(console.error);
-    console.log("send 1 Blob to server")
-    console.log(blob)
+    console.log("send 1 Blob to server");
+    console.log(blob);
+    audioNameArray.push(blobName);
+    console.log("name array:");
+    console.log(audioNameArray);
+}
+
+// To generate default names
+function nameGenerator(){
+    var findIt = false;
+    var name = "";
+    for(i = 1; !findIt; i++){
+        // assume we find a name
+        findIt = true;
+        for (j = 0; j < audioNameArray.length; j++) {
+            // if this is true, then actually we didn't find a new name
+            if (audioNameArray[j] == username.concat(i)) {
+                findIt = false;
+            }
+        }
+        name = username.concat(i);
+    }
+    return name
+}
+
+function renameClip(newName, oldName){
+    // ik this is stupid
+    var addr = serverAddr.concat('/rename/').concat(project).concat('/').concat(newName).concat('/').concat(oldName);
+    fetch(addr);
+}
+
+function deleteClip(name){
+    // ik this is stupid
+    var addr = serverAddr.concat('/delete/').concat(project).concat('/').concat(name);
+    fetch(addr);
 }

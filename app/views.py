@@ -35,6 +35,7 @@ def get_info(projectName):
         res = make_response(jsonify(returnList), 200)
         return res
     else:
+        os.mkdir(p)
         returnList = {}
         returnList["amount"] = "0"
         res = make_response(jsonify(returnList), 200)
@@ -42,29 +43,49 @@ def get_info(projectName):
 
 
 
-@app.route('/api/upload-clip/', methods=["GET","POST"])
+@app.route('/api/upload-clip/<string:projectName>', methods=["GET","POST"])
 @cross_origin(app)
-def upload_clip():
+def upload_clip(projectName):
     print("ha")
     print(request)
     print(request.files)
     if request.method == "POST":
         if request.files:
-            cming_clip = request.files["file"]
-            clip_name = request.files["cname"]
+            cming_clip = request.files["myBlob"]
+            cming_name = cming_clip.filename
             print(cming_clip)
-            print(clip_name)
-            p = os.path.join(app.config["userData"], "TammyProject")
+            print(cming_name)
+            p = os.path.join(app.config["userData"], projectName)
             print(p)
-            cming_clip.save(os.path.join(p, "clip1"))
-            print("clip saved")
+            cming_clip.save(os.path.join(p, cming_name))
+            print("clip", cming_name, "saved")
             # return redirect(request.url)
             return {"test":1}
     return {"test":2}
 
-@app.route('/api/get-blob/<string:name>', methods=["GET"])
+@app.route('/api/get-blob/<string:projectName>/<string:name>', methods=["GET"])
 @cross_origin(app)
-def get_blob(name):
-    p = os.path.join(app.config["userData"], "TammyProject")
+def get_blob(projectName, name):
+    p = os.path.join(app.config["userData"], projectName)
     print(p)
-    return send_from_directory(p, "clip1", as_attachment=False)
+    return send_from_directory(p, name, as_attachment=False)
+
+@app.route('/api/rename/<string:projectName>/<string:newName>/<string:oldName>')
+@cross_origin(app)
+def renameClip(projectName, newName, oldName):
+    srcP = os.path.join(app.config["userData"], projectName, oldName)
+    dstP = os.path.join(app.config["userData"], projectName, newName)
+    print(srcP)
+    print(dstP)
+    os.rename(srcP, dstP)
+    print(oldName, " changed to ", newName)
+    return ("", 200)
+
+@app.route('/api/delete/<string:projectName>/<string:name>')
+@cross_origin(app)
+def deleteClip(projectName, name):
+    p = os.path.join(app.config["userData"], projectName, name)
+    print(p)
+    os.remove(p)
+    print(name, "removed")
+    return ("", 200)
