@@ -5,9 +5,10 @@ const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 // So we can story multiple recordings
 // const audioChunksArray = [];
 const audioBufferArray = [];
+const audioNameArray = [];
 globalSampleRate = 0;
 const serverAddr = "http://127.0.0.1:5000/api";
-var project = "upload-clip";
+var project = "TammyProject";
 
 initialLoad()
 
@@ -197,28 +198,6 @@ function mergeSomething() {
 //     }
 // }
 
-function initialLoad(){
-    // var addr = serverAddr.concat('/').concat(project)
-    var addr = serverAddr
-    fetch(addr, {
-        method:"GET",
-        // mode:"no-cors"
-    }).then(res => {
-        if (!res.ok) throw Error(res.statusText);
-        console.log("b4 .blob");
-        console.log(res);
-        return res.blob();})
-        .then(newBlob => {
-            console.log(newBlob)
-            convertToArrayBuffer(newBlob) // see function below
-                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
-                .then(audioBuffer => {
-                    audioBufferArray.push(audioBuffer);}) // push audioBuffer into the arr
-                .then(() => checkboxManager()); // update the checkboxes in the html document
-        })
-        .catch((error) => console.log(error));
-}
-
 
 function deleteSomething() {
     // prevent the buffer array length from changing while deleting
@@ -230,6 +209,7 @@ function deleteSomething() {
         // the count is an offest when you delete multiple at once
         if (document.getElementById(idname).checked){
             audioBufferArray.splice(i - count, 1);
+            audioNameArray.splice(i - count, 1);
             count++;
         }
     }
@@ -265,18 +245,9 @@ function myDownload(buffer, filename) {
 // converts the (array of audio data) audiochunks -> blob -> url -> arrayBuffer -> audioBuffer 
 // and pushes into audioBufferArray
 function addAudioBuffer(data) {
-    var addr = serverAddr.concat('/').concat(project);
+    
     const blob = new Blob(data);
-
-    const formData = new FormData();
-        formData.append("file", blob);
-        formData.append("name", "newClip");
-        fetch(addr, {
-            method:"POST",
-            body: formData
-        }).catch(console.error);
-
-    console.log(blob)
+    sendBlob2Server(blob);    
     
     //  return audioContext.decodeAudioData(convertToArrayBuffer(blob));
     
@@ -289,6 +260,8 @@ function addAudioBuffer(data) {
     .then(() => checkboxManager()); // update the checkboxes in the html document
     // .then(play);
 }
+
+
 
 // makes a url for the blob, then fetches directly from the url and converts to an arraybuffer
 // (we know it's complicated, but it works [don't know why])
@@ -429,3 +402,62 @@ function floatTo16BitPCM(dataview, buffer, offset) {
     }
     return dataview;
   }
+
+
+function initialLoad(){
+    console.log("trying to fetch project info")
+    var addr = serverAddr.concat('/get-info/').concat(project);
+    fetch(addr, {method:"GET"})
+        .then(res => {
+            if (res.status != 200){
+                console.log('fail to obtain project info');
+                return;
+            }
+            return res.json();
+        })
+        .then(data => {
+            console.log("info start")
+            console.log(data);
+            console.log("info stop");
+            for (i=0; i<data["amount"]-1; i--){
+                console.log("fetching");
+                console.log(data[parseInt[i]]);
+                fetchBlob(data[parseInt(i)]);
+            }
+        })
+}
+
+function fetchBlob(name){
+    // var addr = serverAddr.concat('/').concat(project)
+    addr = serverAddr
+    fetch(addr, {
+        method:"GET"
+        // mode:"no-cors"
+    }).then(res => {
+        if (!res.ok) throw Error(res.statusText);
+        console.log("b4 .blob");
+        console.log(res);
+        return res.blob();})
+        .then(newBlob => {
+            console.log(newBlob)
+            convertToArrayBuffer(newBlob) // see function below
+                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
+                .then(audioBuffer => {
+                    audioBufferArray.push(audioBuffer);}) // push audioBuffer into the arr
+                .then(() => checkboxManager()); // update the checkboxes in the html document
+        })
+        .catch((error) => console.log(error));
+}
+
+function sendBlob2Server(blob){
+    var addr = serverAddr.concat('/').concat(project);
+    const formData = new FormData();
+    formData.append("file", blob);
+    // formData.append("cname", "newClip");
+    fetch(addr, {
+        method:"POST",
+        body: formData
+    }).catch(console.error);
+    console.log("send 1 Blob to server")
+    console.log(blob)
+}
