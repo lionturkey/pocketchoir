@@ -62,17 +62,9 @@ def upload_clip():
             return {"test":1}
     return {"test":2}
 
-<<<<<<< HEAD
 @app.route('/api/get-blob/<string:name>', methods=["GET"])
-=======
-@app.route('/api/', methods=["GET"])
->>>>>>> 3393577cddb43528ba2023e371264b1c2f044ab0
 @cross_origin(app)
 def get_blob(name):
     p = os.path.join(app.config["userData"], "TammyProject")
     print(p)
     return send_from_directory(p, "clip1", as_attachment=False)
-<<<<<<< HEAD
-
-=======
->>>>>>> 3393577cddb43528ba2023e371264b1c2f044ab0
