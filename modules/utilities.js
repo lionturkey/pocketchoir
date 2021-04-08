@@ -6,7 +6,7 @@ function checkboxManager(ctx) {
     var audioBufferArray = ctx["audioBufferArray"];
 
     var text = "";
-    for (var i = 0; i < audioBufferArray.length; ++i){
+    for (let i = 0; i < audioBufferArray.length; ++i){
         text += "<input type=\"checkbox\" class=\"clip\" id=\"box" + i + "\" name=\"z\" value=\"" + i + "\"><br>";
     }
     var node = document.getElementById('recordlist');
@@ -20,7 +20,7 @@ function getSelectedBuffers(ctx) {
     // Grab needed parts of the context
     var audioBufferArray = ctx["audioBufferArray"];
     var selectedBuffers = [];
-    for (var i = 0; i < audioBufferArray.length; ++i) {
+    for (let i = 0; i < audioBufferArray.length; ++i) {
         var idname = "box" + i;
         
         // only process (play) checked items
@@ -69,7 +69,7 @@ export function deleteSomething(ctx) {
         if (document.getElementById(idname).checked){
             audioBufferArray.splice(i - count, 1);
             var toBeRemoved = audioNameArray[i - count];
-            deleteClip(toBeRemoved);
+            deleteClip(ctx, toBeRemoved);
             audioNameArray.splice(i - count, 1);
             count++;
         }
@@ -330,10 +330,10 @@ function nameGenerator(ctx){
 
     var findIt = false;
     var name = "";
-    for(i = 1; !findIt; i++){
+    for(let i = 1; !findIt; i++){
         // assume we find a name
         findIt = true;
-        for (j = 0; j < audioNameArray.length; j++) {
+        for (let j = 0; j < audioNameArray.length; j++) {
             // if this is true, then actually we didn't find a new name
             if (audioNameArray[j] == username.concat(i)) {
                 findIt = false;
@@ -424,13 +424,13 @@ function renderURL(blob) {
 
 function writeString(dataview, offset, header) {
     // let output;
-    for (var i = 0; i < header.length; i++) {
+    for (let i = 0; i < header.length; i++) {
       dataview.setUint8(offset + i, header.charCodeAt(i));
     }
 }
 
 function floatTo16BitPCM(dataview, buffer, offset) {
-    for (var i = 0; i < buffer.length; i++, offset += 2) {
+    for (let i = 0; i < buffer.length; i++, offset += 2) {
       let tmp = Math.max(-1, Math.min(1, buffer[i]));
       dataview.setInt16(offset, tmp < 0 ? tmp * 0x8000 : tmp * 0x7fff, true);
     }
