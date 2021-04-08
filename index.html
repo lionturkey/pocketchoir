@@ -13,37 +13,25 @@
     <div id='login'>
         <input type="text" id="username" name="username" placeholder="Name" />
         <input type="text" id="projectName" name="projectName" placeholder="Project Name" minlength="1"/>
-        <button type="button" id="login-button" onclick="initialLoad()">Login</button>
+        <button type="button" id="login-button">Login</button>
     </div>
     <div id="project">
         <div id="recordlist"></div>
         <div id="control-panel">
             <div id="row-1">
-                <button type="button" id="start">
-                    <!-- <img id="u2_img" class="img " src="images/page_1/mic_u2.svg"/> -->
-                    <img id="u1_img" class="img " src="images/mic_background_u1.svg"/>
-                </button>
-                <button type="button" id="stop">
-                    <img id="u12_img" class="img " src="images/stop_u12.svg"/>
-                </button>
+                <img id="record" class="img " src="images/mic_background_u1.svg"/>
+                <img id="play" class="img " src="images/play_u3.svg"/>
             </div>
             <div id="row-2">
-                <button type="button" id="delete">
-                    <img id="u5_img" class="img " src="images/delete_u5.svg"/>
-                </button>
-                <button type="button" id="play">
-                    <img id="u3_img" class="img " src="images/play_u3.svg"/>
-                </button>
-                <button type="button" id="stop-playing">
-                    <img id="u3_img" class="img " src="images/play_stop_u13.svg"/>
-                </button>
-                <button type="button" id="download">
-                    <img id="u6_img" class="img " src="images/download_u6.svg"/>
-                </button>
+                <img id="delete" class="img " src="images/delete_u5.svg"/>
+                <img id="download" class="img " src="images/download_u6.svg"/>
             </div>
             <div id="row-3"><button type="button" id="merge">Merge</button></div>
-        </div>
+            <div id="row-butt"><button type="button" id="recordtab">Record</button></div>
+            <div id="row-hole"><button type="button" id="edittab">Edit</button></div>
+        </div>    
     </div>
-   <script src="recorder.js"></script> 
+
+<script type="module" src="main.js"></script> 
 </body>
 </html> 
