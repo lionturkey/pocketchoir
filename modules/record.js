@@ -33,6 +33,7 @@ export function makeRecordTab(ctx) {
 
 }
 
+
 function hideEditTab(){
     // hide all buttons except for record
     document.getElementById("record").style.display = "inline";
@@ -42,8 +43,9 @@ function hideEditTab(){
     document.getElementById("merge").style.display = "none";
 }
 
-function recorder(ctx) {
 
+function recorder(ctx) {
+    // start mediarecorder
     navigator.mediaDevices.getUserMedia({ audio: {
         // the below audio options prevent the recording from cutting in and out while there is playback
         autoGainControl: false,

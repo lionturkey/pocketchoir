@@ -57,16 +57,20 @@ export function mergeSomething(ctx) {
 export function deleteSomething(ctx) {
     // Grab needed parts of the context
     var audioBufferArray = ctx["audioBufferArray"];
+    var audioNameArray = ctx["audioNameArray"];
 
     // prevent the buffer array length from changing while deleting
     var prevlength = audioBufferArray.length;
     var count = 0;
-    for (var i = 0; i < prevlength; ++i){
+    for (let i = 0; i < prevlength; ++i){
         var idname = "box" + i;
         // only process (play) checked items
         // the count is an offest when you delete multiple at once
         if (document.getElementById(idname).checked){
             audioBufferArray.splice(i - count, 1);
+            var toBeRemoved = audioNameArray[i - count];
+            deleteClip(toBeRemoved);
+            audioNameArray.splice(i - count, 1);
             count++;
         }
     }
@@ -77,13 +81,18 @@ export function deleteSomething(ctx) {
 export function downloadSomething(ctx) {
     // Grab needed parts of the context
     var audioBufferArray = ctx["audioBufferArray"];
+    var audioNameArray = ctx["audioNameArray"];
 
-    for (var i = 0; i < audioBufferArray.length; ++i){
+    for (let i = 0; i < audioBufferArray.length; ++i){
         var idname = "box" + i;
         // only process (play) checked items
         // the count is an offest when you delete multiple at once
         if (document.getElementById(idname).checked){
             myDownload(ctx, audioBufferArray[i]);
+            var oldName = audioNameArray[i];
+            var newName = audioNameArray[i].concat("Downloaded");
+            renameClip(ctx, newName, oldName);
+            audioNameArray[i] = newName;
         }
     }
 }
@@ -111,10 +120,12 @@ export function addAudioBuffer(ctx, data) {
     var audioBufferArray = ctx["audioBufferArray"];
     var audioContext = ctx["audioCtx"]
     const blob = new Blob(data);
-    
-    // console.log(blob)
-    // console.log(ctx['sameCTX'])
-    //  return audioContext.decodeAudioData(convertToArrayBuffer(blob));
+
+    var blobName = nameGenerator(ctx);
+    console.log("cming name = ");
+    console.log(blobName);
+    sendBlob2Server(ctx, blob, blobName);   
+
     
     convertToArrayBuffer(blob) // see function below
     .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
@@ -209,6 +220,147 @@ function mergeAudio(ctx, buffers) {
     });
     return output;
 }
+
+
+
+// server communication utilities
+
+export async function initialLoad(ctx){
+    var username = ctx["username"];
+    var project = ctx["username"];
+    console.log("trying to fetch project info");
+    var serverAddr = ctx["serverAddr"];
+    var addr = serverAddr.concat('/get-info/').concat(project);
+    fetch(addr, {method:"GET"})
+        .then(res => {
+            if (res.status != 200){
+                console.log('fail to obtain project info');
+                return;
+            }
+            return res.json();
+        })
+        .then(data =>{
+            console.log("info start");
+            console.log(data);
+            console.log("info stop");
+            console.log("amount:");
+            console.log(data["amount"]);
+            load1by1(ctx, data);
+        })
+}
+
+
+const load1by1 = async (ctx, data) => {
+    var audioNameArray = ctx["audioNameArray"];
+
+    for (let i=0; i<data["amount"]; i++){
+        console.log("fetching");
+        console.log(data[parseInt(i)]);
+        const x = await fetchBlob(ctx, data[parseInt(i)]);
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        console.log(x);
+        audioNameArray.push(data[parseInt(i)]);
+        console.log("name array:");
+        console.log(audioNameArray);
+    }
+    console.log("done");
+}
+
+
+function fetchBlob(ctx, name){
+    return new Promise(
+        function(resolve, reject){
+
+        var audioBufferArray = ctx["audioBufferArray"];
+        var audioContext = ctx["audioCtx"]
+        var serverAddr = ctx["serverAddr"];
+
+        addr = serverAddr.concat("/get-blob/").concat(project).concat('/').concat(name);
+        fetch(addr, {
+            method:"GET"
+            // mode:"no-cors"
+        }).then(res => {
+            if (!res.ok) throw Error(res.statusText);
+            console.log("b4 .blob");
+            console.log(res);
+            return res.blob();})
+            .then(newBlob => {
+                console.log(newBlob)
+                convertToArrayBuffer(newBlob) // see function below
+                    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
+                    .then(audioBuffer => {
+                        audioBufferArray.push(audioBuffer);}) // push audioBuffer into the arr
+                    .then(() => {
+                        checkboxManager();
+                        resolve("ok");}); // update the checkboxes in the html document
+            })
+            .catch((error) => {
+                console.log(error);
+                reject("not ok");});
+        }
+    );
+}
+
+function sendBlob2Server(ctx, blob, blobName){
+    var serverAddr = ctx["serverAddr"];
+    var audioNameArray = ctx["audioNameArray"];
+
+    var addr = serverAddr.concat('/upload-clip/').concat(project);
+    const formData = new FormData();
+    formData.append("myBlob", blob, blobName);
+
+    console.log("uploading...");
+    fetch(addr, {
+        method:"POST",
+        body: formData
+    }).catch(console.error);
+
+    console.log("send 1 Blob to server");
+    console.log(blob);
+    audioNameArray.push(blobName);
+
+    console.log("name array:");
+    console.log(audioNameArray);
+}
+
+// To generate default names
+function nameGenerator(ctx){
+    var audioNameArray = ctx["audioNameArray"];
+    var username = ctx["username"];
+
+    var findIt = false;
+    var name = "";
+    for(i = 1; !findIt; i++){
+        // assume we find a name
+        findIt = true;
+        for (j = 0; j < audioNameArray.length; j++) {
+            // if this is true, then actually we didn't find a new name
+            if (audioNameArray[j] == username.concat(i)) {
+                findIt = false;
+            }
+        }
+        name = username.concat(i);
+    }
+    return name
+}
+
+function renameClip(ctx, newName, oldName){
+    var serverAddr = ctx["serverAddr"];
+
+    // ik this is stupid
+    var addr = serverAddr.concat('/rename/').concat(project).concat('/').concat(newName).concat('/').concat(oldName);
+    fetch(addr);
+}
+
+function deleteClip(ctx, name){
+    var serverAddr = ctx["serverAddr"];
+
+    // ik this is stupid
+    var addr = serverAddr.concat('/delete/').concat(project).concat('/').concat(name);
+    fetch(addr);
+}
+
+// end server communication utilities
 
 
 // true, no-context utilities vvvvvvvv
