@@ -1,32 +1,51 @@
 
+// update the checkboxes in the html document
+function checkboxManager(ctx) {
+    console.log('checkbox manager start\n');
+    // Grab needed parts of the context
+    var audioBufferArray = ctx["audioBufferArray"];
+
+    var text = "";
+    for (var i = 0; i < audioBufferArray.length; ++i){
+        text += "<input type=\"checkbox\" class=\"clip\" id=\"box" + i + "\" name=\"z\" value=\"" + i + "\"><br>";
+    }
+    var node = document.getElementById('recordlist');
+    node.innerHTML = text;
+    // console.log('audioBufferArray.length:');
+    // console.log(audioBufferArray.length);
+}
 
 
-
-function getSelectedBuffers() {
-    selectedBuffers = [];
-    for (i = 0; i < audioBufferArray.length; ++i) {
+function getSelectedBuffers(ctx) {
+    // Grab needed parts of the context
+    var audioBufferArray = ctx["audioBufferArray"];
+    var selectedBuffers = [];
+    for (var i = 0; i < audioBufferArray.length; ++i) {
         var idname = "box" + i;
         
         // only process (play) checked items
         if (document.getElementById(idname).checked){
-            console.log('selected i:')
-            console.log(i);
+            // console.log('selected i:')
+            // console.log(i);
             selectedBuffers.push(audioBufferArray[i]);
         }
     }
     return selectedBuffers;
 }
 
+
 // helper function to merge selected audio
-function mergeSomething() {
-    // Add the merged recording to the overall recording list
-    selectedBuffers = getSelectedBuffers();
+export function mergeSomething(ctx) {
+    // Grab needed parts of the context
+    var audioBufferArray = ctx["audioBufferArray"];
+    var selectedBuffers = getSelectedBuffers(ctx);
+
     if (selectedBuffers.length > 0) {
-        // const mergedBuffer = mergeAudio(selectedBuffers);
-        audioBufferArray.push(mergeAudio(selectedBuffers));
+        // Add the merged recording to the overall recording list
+        audioBufferArray.push(mergeAudio(ctx, selectedBuffers));
         
         // update the checkboxes in the html document
-        checkboxManager();
+        checkboxManager(ctx);
     }
     else {
         console.log("u idiot");
@@ -35,11 +54,14 @@ function mergeSomething() {
 }
 
 
-function deleteSomething() {
+export function deleteSomething(ctx) {
+    // Grab needed parts of the context
+    var audioBufferArray = ctx["audioBufferArray"];
+
     // prevent the buffer array length from changing while deleting
     var prevlength = audioBufferArray.length;
     var count = 0;
-    for (i = 0; i < prevlength; ++i){
+    for (var i = 0; i < prevlength; ++i){
         var idname = "box" + i;
         // only process (play) checked items
         // the count is an offest when you delete multiple at once
@@ -48,26 +70,29 @@ function deleteSomething() {
             count++;
         }
     }
-    checkboxManager();
+    checkboxManager(ctx);
 }
 
 
-function downloadSomething() {
-    // prevent the buffer array length from changing while deleting
-    for (i = 0; i < audioBufferArray.length; ++i){
+export function downloadSomething(ctx) {
+    // Grab needed parts of the context
+    var audioBufferArray = ctx["audioBufferArray"];
+
+    for (var i = 0; i < audioBufferArray.length; ++i){
         var idname = "box" + i;
         // only process (play) checked items
         // the count is an offest when you delete multiple at once
         if (document.getElementById(idname).checked){
-            myDownload(audioBufferArray[i]);
+            myDownload(ctx, audioBufferArray[i]);
         }
     }
 }
 
-function myDownload(buffer, filename) {
+
+function myDownload(ctx, buffer, filename) {
     const type = "audio/wav";
     const recorded = interleave(buffer);
-    const dataview = writeHeaders(recorded);
+    const dataview = writeHeaders(ctx, recorded);
     const audioBlob = new Blob([dataview], { type: type });
     const name = filename || "PocketChoir";
     const a = document.createElement("a");
@@ -78,68 +103,84 @@ function myDownload(buffer, filename) {
     return a;
 }
 
+
 // converts the (array of audio data) audiochunks -> blob -> url -> arrayBuffer -> audioBuffer 
 // and pushes into audioBufferArray
-function addAudioBuffer(data) {
+export function addAudioBuffer(ctx, data) {
+    // Grab needed parts of the context
+    var audioBufferArray = ctx["audioBufferArray"];
+    var audioContext = ctx["audioCtx"]
     const blob = new Blob(data);
     
-    console.log(blob)
-    
+    // console.log(blob)
+    // console.log(ctx['sameCTX'])
     //  return audioContext.decodeAudioData(convertToArrayBuffer(blob));
     
     convertToArrayBuffer(blob) // see function below
     .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
     .then(audioBuffer => {
-        globalSampleRate = audioBuffer.sampleRate;
+        ctx["globalSampleRate"] = audioBuffer.sampleRate;
         audioBufferArray.push(audioBuffer)}) // push audioBuffer into the arr
-    .then(() => checkboxManager()); // update the checkboxes in the html document
+    .then(() => checkboxManager(ctx)); // update the checkboxes in the html document
     // .then(play);
 }
+
 
 // makes a url for the blob, then fetches directly from the url and converts to an arraybuffer
 // (we know it's complicated, but it works [don't know why])
 // Purpose: blob -> arraybuffer, so we can do further processing (buffers are good for easy merging and playback of audio)
 function convertToArrayBuffer(blob) {
     const url = URL.createObjectURL(blob);
-    
     return fetch(url).then(response => {
         return response.arrayBuffer();
     });
 }
 
-function playSelected() {
-    selectedBuffers = getSelectedBuffers();
+
+export function playGarbaj(ctx) {
+    var selectedBuffers = getSelectedBuffers(ctx);
+
     if (selectedBuffers.length > 0) {
-        return play(mergeAudio(selectedBuffers));
-    } else {
+        play(ctx, mergeAudio(ctx, selectedBuffers));
+        return;
+    }
+    else {
         console.log("tried to play with nothing selected");
     }
 }
 
+
 // we don't know what this buffer source is, but it works
-function play(audioBuffer) {
+function play(ctx, audioBuffer) {
+    // Grab needed parts of the context
+    var audioContext = ctx["audioCtx"]
     const sourceNode = audioContext.createBufferSource();
     
     sourceNode.buffer = audioBuffer;
-    // sourceNode.detune.value = -300;
-    
     sourceNode.connect(audioContext.destination);
-    // document.getElementById("play").addEventListener("click", function(){sourceNode.start()});
     sourceNode.start();
-    return sourceNode;
+
+    // this will mean the sourceNode is available
+    // wherever there is ctx (good for stopPlaying)
+    ctx['sourceNode'] = sourceNode;
 }
 
 
-function stopPlaying(sourceNode) {
+export function stopPlaying(ctx) {
     console.log('in stopplaying');
+    // Grab needed parts of the context
+    var sourceNode = ctx['sourceNode']
+    var audioContext = ctx["audioCtx"]
     if (sourceNode != null) {
         sourceNode.disconnect(audioContext.destination);
     }
 }
 
 
-function mergeAudio(buffers) {
-    console.log(buffers);
+function mergeAudio(ctx, buffers) {
+    // Grab needed parts of the context
+    var audioContext = ctx["audioCtx"];
+
     const output = audioContext.createBuffer(
         maxNumberOfChannels(buffers),
         buffers[0].sampleRate * maxDuration(buffers),
@@ -168,6 +209,9 @@ function mergeAudio(buffers) {
     });
     return output;
 }
+
+
+// true, no-context utilities vvvvvvvv
 
 function maxDuration(buffers) {
     return Math.max.apply(
@@ -198,7 +242,10 @@ function interleave(input) {
     return result;
 }
 
-function writeHeaders(buffer) {
+// oops, turned out that this one needed ctx...
+function writeHeaders(ctx, buffer) {
+    // Grab needed parts of the context
+    var globalSampleRate = ctx["globalSampleRate"];
     let arrayBuffer = new ArrayBuffer(44 + buffer.length * 2),
       view = new DataView(arrayBuffer);
 
@@ -217,18 +264,18 @@ function writeHeaders(buffer) {
     view.setUint32(40, buffer.length * 2, true);
 
     return floatTo16BitPCM(view, buffer, 44);
-  }
+}
 
 function renderURL(blob) {
     return (window.URL || window.webkitURL).createObjectURL(blob);
-  }
+}
 
 function writeString(dataview, offset, header) {
-    let output;
+    // let output;
     for (var i = 0; i < header.length; i++) {
       dataview.setUint8(offset + i, header.charCodeAt(i));
     }
-  }
+}
 
 function floatTo16BitPCM(dataview, buffer, offset) {
     for (var i = 0; i < buffer.length; i++, offset += 2) {
@@ -236,4 +283,4 @@ function floatTo16BitPCM(dataview, buffer, offset) {
       dataview.setInt16(offset, tmp < 0 ? tmp * 0x8000 : tmp * 0x7fff, true);
     }
     return dataview;
-  }
+}
