@@ -3,6 +3,7 @@
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 import {makeRecordTab} from './modules/record.js'
+import {initialLoad} from './modules/utilities.js'
 
 var lagInterval = 100;
 var project = "upload-clip";
@@ -24,8 +25,8 @@ const ctx = {
 };
 
 // start with project hidden
-loginDiv = document.getElementById("login")
-projectDiv = document.getElementById("project")
+var loginDiv = document.getElementById("login")
+var projectDiv = document.getElementById("project")
 projectDiv.style.display = "none";
 
 // upon login, go to recordTab
