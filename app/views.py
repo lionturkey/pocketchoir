@@ -6,7 +6,7 @@ import os
 # app.config['CORS_HEADERS'] = 'Content-Type'
 # CORS(app)
 
-app.config["userData"] = "/Users/Michael_wang/Documents/UM_Winter_2021/EECS441/pocketchoir/app/Projects"
+app.config["userData"] = "/home/ubuntu/pocketchoir/app/Projects"
 
 # get rid of hidden files
 def MacOSdirClean(l):
