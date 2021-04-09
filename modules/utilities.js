@@ -227,7 +227,7 @@ function mergeAudio(ctx, buffers) {
 
 export async function initialLoad(ctx){
     var username = ctx["username"];
-    var project = ctx["username"];
+    var project = ctx["project"];
     console.log("trying to fetch project info");
     var serverAddr = ctx["serverAddr"];
     var addr = serverAddr.concat('/get-info/').concat(project);
