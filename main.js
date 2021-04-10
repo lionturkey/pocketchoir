@@ -9,7 +9,7 @@ var lagInterval = 100;
 var project = "upload-clip";
 var globalSampleRate = 0;
 // var serverAddress = "http://127.0.0.1:5000/api";
-var serverAddress = "http://ec2-18-216-167-141.us-east-2.compute.amazonaws.com/api";
+var serverAddress = "pocketchoir.com/api";
 
 const ctx = {
     audioBufferArray: [],
