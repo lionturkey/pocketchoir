@@ -22,7 +22,7 @@ const ctx = {
     globalSR: globalSampleRate,
     lagInt: lagInterval,
     sourceNode: null,
-    projectid: project
+    projectid: project,
 };
 
 // start with project hidden
@@ -40,6 +40,7 @@ loginButt.onclick = function(){
     initialLoad(ctx);
     loginDiv.style.display = "none";
     projectDiv.style.display = "inline";
+    
     makeRecordTab(ctx);
 }
 

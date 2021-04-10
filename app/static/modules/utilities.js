@@ -1,3 +1,39 @@
+var startTime;
+var difference;
+var tInterval;
+var running = false;
+
+export function startTimer() {
+    difference = 0;
+    if (!running) {
+        startTime = new Date().getTime();
+        tInterval = setInterval(getShowTime, 1);
+        running = true;
+    }
+}
+
+export function stopTimer() {
+    if (running) {
+        clearInterval(tInterval);
+        running = false;
+    }
+}
+
+function getShowTime() {
+    var timerDisplay = document.querySelector('.timer');
+    difference =  new Date().getTime() - startTime;
+    // var days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((difference % (1000 * 60)) / 1000);
+    var milliseconds = Math.floor((difference % (1000 * 60)) / 100);
+    
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+    milliseconds = milliseconds % 10;
+    timerDisplay.innerHTML = hours + ':' + minutes + ':' + seconds + ':0' + milliseconds;
+}
 
 // update the checkboxes in the html document
 function checkboxManager(ctx) {
@@ -351,7 +387,8 @@ function renameClip(ctx, newName, oldName){
     var project = ctx["project"];
 
     // ik this is stupid
-    var addr = serverAddr.concat('/rename/').concat(project).concat('/').concat(newName).concat('/').concat(oldName);
+    // var addr = serverAddr.concat('/rename/').concat(project).concat('/').concat(newName).concat('/').concat(oldName);
+    var addr = `${serverAddr}/rename/${project}/${newName}/${oldName}`
     fetch(addr);
 }
 
@@ -360,7 +397,8 @@ function deleteClip(ctx, name){
     var project = ctx["project"];
 
     // ik this is stupid
-    var addr = serverAddr.concat('/delete/').concat(project).concat('/').concat(name);
+    // var addr = serverAddr.concat('/delete/').concat(project).concat('/').concat(name);
+    var addr = `${serverAddr}/delete/${project}/${name}`
     fetch(addr);
 }
 

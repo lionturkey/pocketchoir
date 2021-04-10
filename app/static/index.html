@@ -8,28 +8,36 @@
 </head>
 
 <body>
-
-    <h1>PocketChoir</h1>
-    <div id='login'>
-        <input type="text" id="username" name="username" placeholder="Name" />
-        <input type="text" id="projectName" name="projectName" placeholder="Project Name" minlength="1"/>
-        <button type="button" id="login-button">Login</button>
-    </div>
-    <div id="project">
-        <div id="recordlist"></div>
-        <div id="control-panel">
-            <div id="row-1">
-                <img id="record" class="img " src="/static/images/mic_background_u1.svg"/>
-                <img id="play" class="img " src="/static/images/play_u3.svg"/>
+    <div class="content">
+        <h1>PocketChoir</h1>
+        <div id='login'>
+            <input type="text" id="username" name="username" placeholder="Name" />
+            <br>
+            <input type="text" id="projectName" name="projectName" placeholder="Project Name" minlength="1"/>
+            <br>
+            <button type="button" id="login-button">Login</button>
+        </div>
+        <div id="project">
+            <div id="recordlist"></div>
+            <div id="control-panel">
+                <div class="timer"></div>
+                <div id="row-1">
+                    <img id="record" class="img " src="/static/images/mic_background_u1.svg"/>
+                    <img id="play" class="img " src="/static/images/play_u3.svg"/>
+                </div>
+                <div id="row-2">
+                    <img id="delete" class="img " src="/static/images/delete_u5.svg"/>
+                    <img id="download" class="img " src="/static/images/download_u6.svg"/>
+                </div>
+                <div id="row-3">
+                    <button type="button" id="merge">Merge</button>
+                </div>
+            </div>  
+            <div class="tabs">
+                <button type="button" class="tab" id="recordtab">Record</button>
+                <button type="button" class="tab" id="edittab">Edit</button>
             </div>
-            <div id="row-2">
-                <img id="delete" class="img " src="/static/images/delete_u5.svg"/>
-                <img id="download" class="img " src="/static/images/download_u6.svg"/>
-            </div>
-            <div id="row-3"><button type="button" id="merge">Merge</button></div>
-            <div id="row-butt"><button type="button" id="recordtab">Record</button></div>
-            <div id="row-hole"><button type="button" id="edittab">Edit</button></div>
-        </div>    
+        </div>
     </div>
 
 <script type="module" src="/static/main.js"></script> 

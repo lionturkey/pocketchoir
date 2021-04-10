@@ -1,4 +1,17 @@
-button {
+@media screen and (min-width: 480px) {
+  /*CSS if screen size >= 480px*/
+}
+
+body, h1 {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.content {
+  max-width: 480px;
+  margin:auto;
+}
+
+button, #play, #record, #delete, #download {
   -webkit-appearance:none;
   font-size: 400%;
   margin: 0px;
@@ -9,11 +22,32 @@ button {
   cursor: pointer;
 }
 
-body, h1 {
-  font-family: Arial, Helvetica, sans-serif;
+.tabs {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  font-size: 5pt;
+  position: absolute;
+  bottom: 0px;
+  width: auto;
 }
 
-.clip {
+.tabs button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+.tabs button:hover {
+  background-color: #ddd;
+}
+
+.tabs button.active {
+  background-color: #ccc;
 }
 
 #stop {
@@ -22,6 +56,16 @@ body, h1 {
 
 #stop-playing {
   display: none;
+}
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 5px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 input[type='checkbox'] {
@@ -43,7 +87,7 @@ input[type='checkbox']:checked {
   /* overflow-y: auto; */
 }
 
-#merge {
+#merge, #login-button {
   -webkit-appearance:none;
   border-width:0px;
   /* position:absolute;
@@ -65,7 +109,7 @@ input[type='checkbox']:checked {
 #control-panel {
   -webkit-appearance:none;
   position: absolute;
-  bottom: 15px;
+  bottom: 70px;
   left: calc(50% - 105.45px);
 }
 

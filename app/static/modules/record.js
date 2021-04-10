@@ -1,7 +1,6 @@
 
-import { playGarbaj, addAudioBuffer } from './utilities.js';
+import { playGarbaj, addAudioBuffer, startTimer, stopTimer } from './utilities.js';
 import { makeEditTab } from './edit.js';
-
 
 export function makeRecordTab(ctx) {
     hideEditTab();
@@ -14,27 +13,26 @@ export function makeRecordTab(ctx) {
     var editTab = document.getElementById("edittab");
 
     // record button should play and record simultaneously
-    recordButt.onclick = function(){
+    recordButt.onclick = function() {
         console.log("Start recording");
         playGarbaj(ctx);
+        startTimer();
 
         // switch to image for StopRecord button
         recordButt.src = "/static/images/stop_u12.svg";
 
         // Create and start the mediarecorder
         // TODO: add timer
-        setTimeout(function(){recorder(ctx);}, lagInterval);
+        setTimeout(() => (recorder(ctx)), lagInterval);
     };
 
     // button to switch to edit tab
-    editTab.onclick = function(){
-        makeEditTab(ctx);
-    }
+    editTab.onclick = () => { makeEditTab(ctx)}
 
 }
 
 
-function hideEditTab(){
+function hideEditTab() {
     // hide all buttons except for record
     document.getElementById("record").style.display = "inline";
     document.getElementById("play").style.display = "none";
@@ -59,23 +57,24 @@ function recorder(ctx) {
         mediaRecorder.start();
 
         // Event listener to add audio to array as it comes in
-        mediaRecorder.ondataavailable = function(event){
+        mediaRecorder.ondataavailable = function(event) {
             audioChunks.push(event.data);
         };
 
         var recordButt = document.getElementById("record");
         // recordButt is currently a StopRecord button, so
         // make it act accordingly
-        recordButt.onclick = function(){
+        recordButt.onclick = function() {
             console.log("stop recording");
             // switch to image for record button
             recordButt.src = "/static/images/mic_background_u1.svg";
             mediaRecorder.stop();
+            stopTimer();
 
             // without a short delay, addAudioBuffer can't
             // handle audioChunks for some reason. This is likely
             // device specific, but I've set it to .1s for now.
-            setTimeout(function(){
+            setTimeout(function() {
                 addAudioBuffer(ctx, audioChunks);
                 // reset tab
                 makeRecordTab(ctx);    
