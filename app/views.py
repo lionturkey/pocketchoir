@@ -16,6 +16,10 @@ def MacOSdirClean(l):
             newL.append(dir)
     return newL
 
+@app.route('/')
+def root():
+    return app.send_static_file('index.html')
+
 @app.route('/api/get-info/<string:projectName>', methods=["GET"])
 @cross_origin(app)
 def get_info(projectName):
