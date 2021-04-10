@@ -226,8 +226,8 @@ function mergeAudio(ctx, buffers) {
 // server communication utilities
 
 export async function initialLoad(ctx){
-    var username = ctx["username"];
-    var project = ctx["username"];
+    // var username = ctx["username"];
+    var project = ctx["project"];
     console.log("trying to fetch project info");
     var serverAddr = ctx["serverAddr"];
     var addr = serverAddr.concat('/get-info/').concat(project);
@@ -274,6 +274,7 @@ function fetchBlob(ctx, name){
         var audioBufferArray = ctx["audioBufferArray"];
         var audioContext = ctx["audioCtx"]
         var serverAddr = ctx["serverAddr"];
+        var project = ctx["project"];
 
         addr = serverAddr.concat("/get-blob/").concat(project).concat('/').concat(name);
         fetch(addr, {
@@ -304,6 +305,7 @@ function fetchBlob(ctx, name){
 function sendBlob2Server(ctx, blob, blobName){
     var serverAddr = ctx["serverAddr"];
     var audioNameArray = ctx["audioNameArray"];
+    var project = ctx["project"];
 
     var addr = serverAddr.concat('/upload-clip/').concat(project);
     const formData = new FormData();
@@ -346,6 +348,7 @@ function nameGenerator(ctx){
 
 function renameClip(ctx, newName, oldName){
     var serverAddr = ctx["serverAddr"];
+    var project = ctx["project"];
 
     // ik this is stupid
     var addr = serverAddr.concat('/rename/').concat(project).concat('/').concat(newName).concat('/').concat(oldName);
@@ -354,6 +357,7 @@ function renameClip(ctx, newName, oldName){
 
 function deleteClip(ctx, name){
     var serverAddr = ctx["serverAddr"];
+    var project = ctx["project"];
 
     // ik this is stupid
     var addr = serverAddr.concat('/delete/').concat(project).concat('/').concat(name);
