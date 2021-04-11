@@ -57,8 +57,21 @@ button, #play, #record, #delete, #download {
 #stop-playing {
   display: none;
 }
+input.clip-name[type=text] {
+  width: 200px; /* match width of the checkboxes */
+  padding: 0px 0px;
+  margin: 0px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
 
-input[type=text], select {
+input.clip-name[type=text], select {
+  border: none;
+}
+
+input.login-input[type=text], select {
   width: 100%;
   padding: 12px 20px;
   margin: 5px 0;

@@ -40,13 +40,38 @@ function checkboxManager(ctx) {
     console.log('checkbox manager start\n');
     // Grab needed parts of the context
     var audioBufferArray = ctx["audioBufferArray"];
+    var audioNameArray = ctx["audioNameArray"];
+    // console.log(audioNameArray);
 
+    // var text = buildClipHTML(ctx.audioNameArray, ctx.audioBufferArray.length);
     var text = "";
     for (let i = 0; i < audioBufferArray.length; ++i){
-        text += "<input type=\"checkbox\" class=\"clip\" id=\"box" + i + "\" name=\"z\" value=\"" + i + "\"><br>";
+        var clipName = `<input type="text" id="name${i}" class="clip-name" value="${audioNameArray[i]}"/><br>\n`
+        var checkbox = `<input type="checkbox" checked="checked" id="box${i}" value="${i}"/><br>\n`
+        text += `<div class="clip"> ${clipName + checkbox} </div>`;
     }
     var node = document.getElementById('recordlist');
     node.innerHTML = text;
+
+    for (let i = 0; i < audioBufferArray.length; i++) {
+        var nameElement = document.getElementById(`name${i}`);
+        nameElement.addEventListener("blur", function () {
+            if (nameElement.value != audioNameArray[i]) {
+                renameClip(ctx, nameElement.value, audioNameArray[i]);
+            }
+        });
+        nameElement.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the button element with a click
+                if (nameElement.value != audioNameArray[i]) {
+                    renameClip(ctx, nameElement.value, audioNameArray[i]);
+                }
+              }
+        });
+    }
+
     // console.log('audioBufferArray.length:');
     // console.log(audioBufferArray.length);
 }
@@ -382,7 +407,8 @@ function nameGenerator(ctx){
     return name
 }
 
-function renameClip(ctx, newName, oldName){
+function renameClip(ctx, newName, oldName) {
+    console.log(`renaming clip from ${oldName} to ${newName}`);
     var serverAddr = ctx["serverAddr"];
     var project = ctx["project"];
 

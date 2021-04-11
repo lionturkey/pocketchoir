@@ -32,15 +32,29 @@ projectDiv.style.display = "none";
 
 // upon login, go to recordTab
 var loginButt = document.getElementById("login-button");
+var projectNameInput = document.getElementById("projectName");
+
+// Clicks login button when user hits enter
+projectNameInput.addEventListener("keyup", function(event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      loginButt.click();
+    }
+});
+
 loginButt.onclick = function(){
-
     ctx["username"] = document.getElementById("username").value;
-    ctx["project"] = document.getElementById("projectName").value;
+    ctx["project"] = projectNameInput.value;
 
-    initialLoad(ctx);
-    loginDiv.style.display = "none";
-    projectDiv.style.display = "inline";
-    
-    makeRecordTab(ctx);
+    if (ctx["username"] !== "" && ctx["project"] !== "") {
+        initialLoad(ctx);
+        loginDiv.style.display = "none";
+        projectDiv.style.display = "inline";
+        
+        makeRecordTab(ctx);
+    }
 }
 
