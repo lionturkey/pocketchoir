@@ -53,20 +53,25 @@ function checkboxManager(ctx) {
     var node = document.getElementById('recordlist');
     node.innerHTML = text;
 
+    var nameElements = []
     for (let i = 0; i < audioBufferArray.length; i++) {
-        var nameElement = document.getElementById(`name${i}`);
-        nameElement.addEventListener("blur", function () {
-            if (nameElement.value != audioNameArray[i]) {
-                renameClip(ctx, nameElement.value, audioNameArray[i]);
+        nameElements.push(document.getElementById(`name${i}`));
+        console.log(`for loop value: ${nameElements[i].value}, i: ${i}`)
+        nameElements[i].addEventListener("blur", function () {
+            if (nameElements[i].value != audioNameArray[i]) {
+                console.log(audioNameArray)
+                console.log(`value: ${nameElements[i].value}, i: ${i}`)
+                renameClip(ctx, nameElements[i].value, i);
             }
         });
-        nameElement.addEventListener("keyup", function(event) {
+        nameElements[i].addEventListener("keyup", function(event) {
             if (event.keyCode === 13) {
                 // Cancel the default action, if needed
                 event.preventDefault();
                 // Trigger the button element with a click
-                if (nameElement.value != audioNameArray[i]) {
-                    renameClip(ctx, nameElement.value, audioNameArray[i]);
+                if (nameElements[i].value != audioNameArray[i]) {
+                    console.log(`value: ${nameElements[i].value}, i: ${i}`)
+                    renameClip(ctx, nameElements[i].value, i);
                 }
               }
         });
@@ -282,7 +287,7 @@ function mergeAudio(ctx, buffers) {
 
 // server communication utilities
 
-export async function initialLoad(ctx){
+export async function initialLoad(ctx) {
     var username = ctx["username"];
     var project = ctx["project"];
     console.log("trying to fetch project info");
@@ -383,7 +388,7 @@ function sendBlob2Server(ctx, blob, blobName){
 }
 
 // To generate default names
-function nameGenerator(ctx){
+function nameGenerator(ctx) {
     var audioNameArray = ctx["audioNameArray"];
     var username = ctx["username"];
 
@@ -403,15 +408,20 @@ function nameGenerator(ctx){
     return name
 }
 
-function renameClip(ctx, newName, oldName) {
-    console.log(`renaming clip from ${oldName} to ${newName}`);
+function renameClip(ctx, newName, oldName_idx) {
     var serverAddr = ctx["serverAddr"];
     var project = ctx["project"];
+    var audioNameArray = ctx["audioNameArray"];
+    var oldName = audioNameArray[oldName_idx];
+
+    console.log(`renaming clip from ${oldName} to ${newName}`);
 
     // ik this is stupid
     // var addr = serverAddr.concat('/rename/').concat(project).concat('/').concat(newName).concat('/').concat(oldName);
     var addr = `${serverAddr}/rename/${project}/${newName}/${oldName}`
     fetch(addr);
+    
+    ctx.audioNameArray[oldName_idx] = newName;
 }
 
 function deleteClip(ctx, name){

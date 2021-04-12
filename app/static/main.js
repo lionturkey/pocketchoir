@@ -45,7 +45,7 @@ projectNameInput.addEventListener("keyup", function(event) {
     }
 });
 
-loginButt.onclick = function(){
+loginButt.onclick = function() {
     ctx["username"] = document.getElementById("username").value;
     ctx["project"] = projectNameInput.value;
 
