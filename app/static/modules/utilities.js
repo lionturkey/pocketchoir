@@ -56,6 +56,8 @@ function checkboxManager(ctx) {
     for (let i = 0; i < audioBufferArray.length; i++) {
         var nameElement = document.getElementById(`name${i}`);
         nameElement.addEventListener("blur", function () {
+            console.log(nameElement);
+            console.log(nameElement.value);
             if (nameElement.value != audioNameArray[i]) {
                 renameClip(ctx, nameElement.value, audioNameArray[i]);
             }
@@ -103,7 +105,13 @@ export function mergeSomething(ctx) {
 
     if (selectedBuffers.length > 0) {
         // Add the merged recording to the overall recording list
-        audioBufferArray.push(mergeAudio(ctx, selectedBuffers));
+        var merged = mergeAudio(ctx, selectedBuffers)
+    
+
+        // var blobName = "merged".concat(nameGenerator(ctx));
+        // sendBlob2Server(ctx, blob, blobName);
+    
+        audioBufferArray.push(merged);
         
         // update the checkboxes in the html document
         checkboxManager(ctx);
