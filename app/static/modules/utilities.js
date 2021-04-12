@@ -314,6 +314,7 @@ export async function initialLoad(ctx) {
             console.log("amount:");
             console.log(data["amount"]);
             load1by1(ctx, data);
+            checkboxManager(ctx);
         })
 }
 
@@ -358,10 +359,7 @@ function fetchBlob(ctx, name){
                 convertToArrayBuffer(newBlob) // see function below
                     .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
                     .then(audioBuffer => {
-                        audioBufferArray.push(audioBuffer);}) // push audioBuffer into the arr
-                    .then(() => {
-                        checkboxManager(ctx);
-                        resolve("ok");}); // update the checkboxes in the html document
+                        audioBufferArray.push(audioBuffer);}); // push audioBuffer into the arr
             })
             .catch((error) => {
                 console.log(error);
