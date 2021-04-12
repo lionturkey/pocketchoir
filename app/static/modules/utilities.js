@@ -39,13 +39,12 @@ function getShowTime() {
 function checkboxManager(ctx) {
     console.log('checkbox manager start\n');
     // Grab needed parts of the context
-    var audioBufferArray = ctx["audioBufferArray"];
     var audioNameArray = ctx["audioNameArray"];
     // console.log(audioNameArray);
 
     // var text = buildClipHTML(ctx.audioNameArray, ctx.audioBufferArray.length);
     var text = "";
-    for (let i = 0; i < audioBufferArray.length; ++i){
+    for (let i = 0; i < audioNameArray.length; ++i){
         var clipName = `<input type="text" id="name${i}" class="clip-name" value="${audioNameArray[i]}"/><br>\n`
         var checkbox = `<input type="checkbox" checked="checked" id="box${i}" value="${i}"/><br>\n`
         text += `<div class="clip"> ${clipName + checkbox} </div>`;
@@ -54,7 +53,7 @@ function checkboxManager(ctx) {
     node.innerHTML = text;
 
     var nameElements = []
-    for (let i = 0; i < audioBufferArray.length; i++) {
+    for (let i = 0; i < audioNameArray.length; i++) {
         nameElements.push(document.getElementById(`name${i}`));
         console.log(`for loop value: ${nameElements[i].value}, i: ${i}`)
         nameElements[i].addEventListener("blur", function () {
@@ -307,14 +306,13 @@ export async function initialLoad(ctx) {
             }
             return res.json();
         })
-        .then(async data =>{
+        .then(data =>{
             console.log("info start");
             console.log(data);
             console.log("info stop");
             console.log("amount:");
             console.log(data["amount"]);
-            await load1by1(ctx, data);
-            checkboxManager(ctx);
+            load1by1(ctx, data);
         })
 }
 
@@ -322,7 +320,7 @@ export async function initialLoad(ctx) {
 const load1by1 = async (ctx, data) => {
     var audioNameArray = ctx["audioNameArray"];
 
-    for (let i=0; i<data["amount"]; i++) {
+    for (let i=0; i<data["amount"]; i++){
         console.log("fetching");
         console.log(data[parseInt(i)]);
         const x = await fetchBlob(ctx, data[parseInt(i)]);
@@ -359,7 +357,10 @@ function fetchBlob(ctx, name){
                 convertToArrayBuffer(newBlob) // see function below
                     .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)) // convert from arraybuffer to audiobuffer
                     .then(audioBuffer => {
-                        audioBufferArray.push(audioBuffer);}); // push audioBuffer into the arr
+                        audioBufferArray.push(audioBuffer);}) // push audioBuffer into the arr
+                    .then(() => {
+                        checkboxManager(ctx);
+                        resolve("ok");}); // update the checkboxes in the html document
             })
             .catch((error) => {
                 console.log(error);
