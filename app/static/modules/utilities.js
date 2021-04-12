@@ -314,8 +314,8 @@ export async function initialLoad(ctx) {
             console.log("amount:");
             console.log(data["amount"]);
             load1by1(ctx, data);
-            checkboxManager(ctx);
         })
+        .then(() => checkboxManager(ctx));
 }
 
 
