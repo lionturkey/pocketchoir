@@ -57,6 +57,7 @@ function checkboxManager(ctx) {
         var nameElement = document.getElementById(`name${i}`);
         nameElement.addEventListener("blur", function () {
             console.log(nameElement);
+            console.log(i);
             console.log(nameElement.value);
             if (nameElement.value != audioNameArray[i]) {
                 renameClip(ctx, nameElement.value, audioNameArray[i]);
