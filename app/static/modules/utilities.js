@@ -323,12 +323,12 @@ const load1by1 = async (ctx, data) => {
     for (let i=0; i<data["amount"]; i++){
         console.log("fetching");
         console.log(data[parseInt(i)]);
-        const x = await fetchBlob(ctx, data[parseInt(i)]);
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        console.log(x);
         audioNameArray.push(data[parseInt(i)]);
         console.log("name array:");
         console.log(audioNameArray);
+        const x = await fetchBlob(ctx, data[parseInt(i)]);
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        console.log(x);
     }
     console.log("done");
 }
