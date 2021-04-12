@@ -307,22 +307,22 @@ export async function initialLoad(ctx) {
             }
             return res.json();
         })
-        .then(data =>{
+        .then(async data =>{
             console.log("info start");
             console.log(data);
             console.log("info stop");
             console.log("amount:");
             console.log(data["amount"]);
-            load1by1(ctx, data);
+            await load1by1(ctx, data);
+            checkboxManager(ctx);
         })
-        .then(() => checkboxManager(ctx));
 }
 
 
 const load1by1 = async (ctx, data) => {
     var audioNameArray = ctx["audioNameArray"];
 
-    for (let i=0; i<data["amount"]; i++){
+    for (let i=0; i<data["amount"]; i++) {
         console.log("fetching");
         console.log(data[parseInt(i)]);
         const x = await fetchBlob(ctx, data[parseInt(i)]);
