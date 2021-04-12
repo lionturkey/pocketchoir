@@ -158,10 +158,6 @@ export function downloadSomething(ctx) {
         // the count is an offest when you delete multiple at once
         if (document.getElementById(idname).checked){
             myDownload(ctx, audioBufferArray[i]);
-            var oldName = audioNameArray[i];
-            var newName = audioNameArray[i].concat("Downloaded");
-            renameClip(ctx, newName, oldName);
-            audioNameArray[i] = newName;
         }
     }
 }
