@@ -109,8 +109,8 @@ export function mergeSomething(ctx) {
         // Add the merged recording to the overall recording list
         var merged = mergeAudio(ctx, selectedBuffers)
     
-        mergedArray = merged.getChannelData(0);
-        blob = new Blob(mergedArray);
+        var mergedArray = merged.getChannelData(0);
+        var blob = new Blob(mergedArray);
         var blobName = "merged".concat(nameGenerator(ctx));
         sendBlob2Server(ctx, blob, blobName);
     
