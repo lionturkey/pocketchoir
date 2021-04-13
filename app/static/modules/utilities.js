@@ -1,3 +1,4 @@
+import { makeEditTab } from './edit.js'
 var startTime;
 var difference;
 var tInterval;
@@ -234,8 +235,17 @@ function play(ctx, audioBuffer) {
     var audioContext = ctx["audioCtx"]
     const sourceNode = audioContext.createBufferSource();
     
+
     sourceNode.buffer = audioBuffer;
     sourceNode.connect(audioContext.destination);
+    sourceNode.addEventListener('ended', () => {
+        var playButt = document.getElementById("play");
+        if (playButt.style.display == "inline") {
+            playButt.src = "/static/images/play_u3.svg"
+            stopTimer();
+            makeEditTab(ctx); // reset tab
+        }
+    })
     sourceNode.start();
 
     // this will mean the sourceNode is available
