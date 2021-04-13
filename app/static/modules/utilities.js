@@ -299,7 +299,7 @@ function mergeAudio(ctx, buffers) {
     var audioContext = ctx["audioCtx"];
 
     const output = audioContext.createBuffer(
-        maxNumberOfChannels(buffers),
+        1,
         buffers[0].sampleRate * maxDuration(buffers),
         buffers[0].sampleRate
     );
