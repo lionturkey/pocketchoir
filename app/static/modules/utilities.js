@@ -113,6 +113,9 @@ export function mergeSomething(ctx) {
         var blob = new Blob(mergedArray);
         var blobName = "merged".concat(nameGenerator(ctx));
         sendBlob2Server(ctx, blob, blobName);
+
+        console.log("checkblob length");
+        console.log(blob);
     
         audioBufferArray.push(merged);
         

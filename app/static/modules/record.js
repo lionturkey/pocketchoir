@@ -83,7 +83,7 @@ function recorder(ctx) {
                 makeRecordTab(ctx);    
             }, 100);
 
-        // }
+        }
     // })
 
 }
