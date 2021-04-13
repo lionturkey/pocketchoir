@@ -107,9 +107,10 @@ export function mergeSomething(ctx) {
 
     if (selectedBuffers.length > 0) {
         // Add the merged recording to the overall recording list
-        var merged = mergeAudio(ctx, selectedBuffers)
-        var mergedArray = merged.getChannelData(0);
-        addAudioBuffer(ctx, mergedArray);
+        // var merged = mergeAudio(ctx, selectedBuffers)
+        // var mergedArray = merged.getChannelData(0);
+        // addAudioBuffer(ctx, mergedArray);
+        console.log("lol. Merge is broken rn sry")
 
         // var blob = new Blob(mergedArray);
         // var blobName = "merged".concat(nameGenerator(ctx));
