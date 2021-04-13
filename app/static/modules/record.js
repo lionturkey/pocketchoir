@@ -43,44 +43,35 @@ function hideEditTab() {
 
 
 function recorder(ctx) {
-    // start mediarecorder
-    navigator.mediaDevices.getUserMedia({ audio: {
-        // the below audio options prevent the recording from cutting in and out while there is playback
-        autoGainControl: false,
-        echoCancellation: false,
-        noiseSuppression: false
-    } })
-    .then(async stream => {
-        // Create objects to record audio
-        const mediaRecorder = new MediaRecorder(stream);
-        const audioChunks = [];
-        mediaRecorder.start();
+    var stream = ctx["stream"];
 
-        // Event listener to add audio to array as it comes in
-        mediaRecorder.ondataavailable = function(event) {
-            audioChunks.push(event.data);
-        };
+    const mediaRecorder = new MediaRecorder(stream);
+    const audioChunks = [];
+    mediaRecorder.start();
 
-        var recordButt = document.getElementById("record");
-        // recordButt is currently a StopRecord button, so
-        // make it act accordingly
-        recordButt.onclick = function() {
-            console.log("stop recording");
-            // switch to image for record button
-            recordButt.src = "/static/images/mic_background_u1.svg";
-            mediaRecorder.stop();
-            stopTimer();
+    // Event listener to add audio to array as it comes in
+    mediaRecorder.ondataavailable = function(event) {
+        audioChunks.push(event.data);
+    };
 
-            // without a short delay, addAudioBuffer can't
-            // handle audioChunks for some reason. This is likely
-            // device specific, but I've set it to .1s for now.
-            setTimeout(function() {
-                addAudioBuffer(ctx, audioChunks);
-                // reset tab
-                makeRecordTab(ctx);    
-            }, 100);
+    var recordButt = document.getElementById("record");
+    // recordButt is currently a StopRecord button, so
+    // make it act accordingly
+    recordButt.onclick = function() {
+        console.log("stop recording");
+        // switch to image for record button
+        recordButt.src = "/static/images/mic_background_u1.svg";
+        mediaRecorder.stop();
+        stopTimer();
 
-        }
-    })
+        // without a short delay, addAudioBuffer can't
+        // handle audioChunks for some reason. This is likely
+        // device specific, but I've set it to .1s for now.
+        setTimeout(function() {
+            addAudioBuffer(ctx, audioChunks);
+            // reset tab
+            makeRecordTab(ctx);    
+        }, 100);
 
+    }
 }
