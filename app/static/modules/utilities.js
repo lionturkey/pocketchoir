@@ -256,6 +256,40 @@ export function stopPlaying(ctx) {
 }
 
 
+// function mergeAudio(ctx, buffers) {
+//     // Grab needed parts of the context
+//     var audioContext = ctx["audioCtx"];
+
+//     const output = audioContext.createBuffer(
+//         maxNumberOfChannels(buffers),
+//         buffers[0].sampleRate * maxDuration(buffers),
+//         buffers[0].sampleRate
+//     );
+    
+//     buffers.forEach((buffer) => {
+//         for (
+//             let channelNumber = 0;
+//             channelNumber < buffer.numberOfChannels;
+//             channelNumber += 1
+//         ) {
+//             const outputData = output.getChannelData(channelNumber);
+//             const bufferData = buffer.getChannelData(channelNumber);
+            
+//             for (
+//                 let i = buffer.getChannelData(channelNumber).length - 1;
+//                 i >= 0;
+//                 i -= 1
+//             ) {
+//                 outputData[i] += bufferData[i];
+//             }
+            
+//             output.getChannelData(channelNumber).set(outputData);
+//         }
+//     });
+//     return output;
+// }
+
+
 function mergeAudio(ctx, buffers) {
     // Grab needed parts of the context
     var audioContext = ctx["audioCtx"];
@@ -267,28 +301,21 @@ function mergeAudio(ctx, buffers) {
     );
     
     buffers.forEach((buffer) => {
+        const outputData = output.getChannelData(0);
+        const bufferData = buffer.getChannelData(0);
+        
         for (
-            let channelNumber = 0;
-            channelNumber < buffer.numberOfChannels;
-            channelNumber += 1
+            let i = buffer.getChannelData(0).length - 1;
+            i >= 0;
+            i -= 1
         ) {
-            const outputData = output.getChannelData(channelNumber);
-            const bufferData = buffer.getChannelData(channelNumber);
-            
-            for (
-                let i = buffer.getChannelData(channelNumber).length - 1;
-                i >= 0;
-                i -= 1
-            ) {
-                outputData[i] += bufferData[i];
-            }
-            
-            output.getChannelData(channelNumber).set(outputData);
+            outputData[i] += bufferData[i];
         }
+        
+        output.getChannelData(0).set(outputData);
     });
     return output;
 }
-
 
 
 // server communication utilities
