@@ -44,14 +44,17 @@ function hideEditTab() {
 
 function recorder(ctx) {
     // start mediarecorder
-    navigator.mediaDevices.getUserMedia({ audio: {
+    // navigator.mediaDevices.getUserMedia({ audio: {
         // the below audio options prevent the recording from cutting in and out while there is playback
-        autoGainControl: false,
-        echoCancellation: false,
-        noiseSuppression: false
-    } })
-    .then(async stream => {
+        // autoGainControl: false,
+        // echoCancellation: false,
+        // noiseSuppression: false
+    // } })
+    // .then(async stream => {
         // Create objects to record audio
+
+        var stream = ctx["stream"];
+
         const mediaRecorder = new MediaRecorder(stream);
         const audioChunks = [];
         mediaRecorder.start();
@@ -80,7 +83,7 @@ function recorder(ctx) {
                 makeRecordTab(ctx);    
             }, 100);
 
-        }
-    })
+        // }
+    // })
 
 }

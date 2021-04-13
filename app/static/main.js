@@ -58,10 +58,17 @@ loginButt.onclick = function() {
     }
 }
 
-navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(function(_) {
+navigator.mediaDevices.getUserMedia({ audio: {
+    // the below audio options prevent the recording from cutting in and out while there is playback
+    autoGainControl: false,
+    echoCancellation: false,
+    noiseSuppression: false
+} })
+      .then(async stream => {
         console.log('You let me use your mic!');
+        ctx["stream"] = stream;
       })
       .catch(function(_) {
         console.log('No mic for you!');
       });
+
