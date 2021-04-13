@@ -58,3 +58,10 @@ loginButt.onclick = function() {
     }
 }
 
+navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(function(_) {
+        console.log('You let me use your mic!');
+      })
+      .catch(function(_) {
+        console.log('No mic for you!');
+      });
