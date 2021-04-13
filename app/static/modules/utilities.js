@@ -108,19 +108,20 @@ export function mergeSomething(ctx) {
     if (selectedBuffers.length > 0) {
         // Add the merged recording to the overall recording list
         var merged = mergeAudio(ctx, selectedBuffers)
-    
         var mergedArray = merged.getChannelData(0);
-        var blob = new Blob(mergedArray);
-        var blobName = "merged".concat(nameGenerator(ctx));
-        sendBlob2Server(ctx, blob, blobName);
+        addAudioBuffer(ctx, mergedArray);
 
-        console.log("checkblob length");
-        console.log(blob);
+        // var blob = new Blob(mergedArray);
+        // var blobName = "merged".concat(nameGenerator(ctx));
+        // sendBlob2Server(ctx, blob, blobName);
+
+        // console.log("checkblob length");
+        // console.log(blob);
     
-        audioBufferArray.push(merged);
+        // audioBufferArray.push(merged);
         
-        // update the checkboxes in the html document
-        checkboxManager(ctx);
+        // // update the checkboxes in the html document
+        // checkboxManager(ctx);
     }
     else {
         console.log("u idiot");
