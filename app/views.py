@@ -2,11 +2,40 @@ from app import app
 from flask import render_template, request, send_file, redirect, jsonify, make_response, send_from_directory, abort
 from flask_cors import CORS, cross_origin
 import os
+import datetime
 
 # app.config['CORS_HEADERS'] = 'Content-Type'
 # CORS(app)
 
-app.config["userData"] = "/home/ubuntu/pocketchoir/app/Projects"
+# app.config["userData"] = "/home/ubuntu/pocketchoir/app/Projects"
+app.config["userData"] = "/Users/Michael_wang/Documents/UM_Winter_2021/EECS441/pocketchoir/app/Projects"
+
+def nameManager(name, operation):
+    # %y%m%d%H%M%S = YYYYMMDD + hour + minute + second, i.e. 20210414181602
+    timeStamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    if operation == "add":
+        return timeStamp + name
+    elif operation == "remove":
+        return name[14:]
+    raise Exception("nameManager: No operation specified")
+
+# split timename into time, name
+def splitTime(nameList):
+    time = []
+    name = []
+    for ele in nameList:
+        time.append(ele[:14])
+        name.append(ele[14:])
+    return time, name
+
+# user provide the name they can see, this is to find what is the file
+# name on the server end
+def getFileName(projectName, name):
+    p = os.path.join(app.config["userData"], projectName)
+    nameList = os.listdir(p)
+    nameList = MacOSdirClean(nameList)
+    timeList, nameList = splitTime(nameList)
+    return timeList[nameList.index(name)] + name
 
 # get rid of hidden files
 def MacOSdirClean(l):
@@ -34,7 +63,7 @@ def get_info(projectName):
         returnList = {}
         returnList["amount"] = len(nameList)
         for i in range(len(nameList)):
-            returnList[str(i)] = nameList[i]
+            returnList[str(i)] = nameManager(nameList[i], "remove")
 
         res = make_response(jsonify(returnList), 200)
         return res
@@ -56,7 +85,7 @@ def upload_clip(projectName):
     if request.method == "POST":
         if request.files:
             cming_clip = request.files["myBlob"]
-            cming_name = cming_clip.filename
+            cming_name = nameManager(cming_clip.filename, "add")
             print(cming_clip)
             print(cming_name)
             p = os.path.join(app.config["userData"], projectName)
@@ -64,21 +93,24 @@ def upload_clip(projectName):
             cming_clip.save(os.path.join(p, cming_name))
             print("clip", cming_name, "saved")
             # return redirect(request.url)
-            return {"test":1}
-    return {"test":2}
+            res = make_response(jsonify({"test":1}), 200)
+            return res
+    res = make_response(jsonify({"test": 2}), 200)
+    return res
 
 @app.route('/api/get-blob/<string:projectName>/<string:name>', methods=["GET"])
 @cross_origin(app)
 def get_blob(projectName, name):
     p = os.path.join(app.config["userData"], projectName)
-    print(p)
-    return send_from_directory(p, name, as_attachment=False)
+    fileName = getFileName(projectName, name)
+    return send_from_directory(p, fileName, as_attachment=False)
 
 @app.route('/api/rename/<string:projectName>/<string:newName>/<string:oldName>')
 @cross_origin(app)
 def renameClip(projectName, newName, oldName):
-    srcP = os.path.join(app.config["userData"], projectName, oldName)
-    dstP = os.path.join(app.config["userData"], projectName, newName)
+    fileName = getFileName(projectName, oldName)
+    srcP = os.path.join(app.config["userData"], projectName, fileName)
+    dstP = os.path.join(app.config["userData"], projectName, fileName[:14] + newName)
     print(srcP)
     print(dstP)
     os.rename(srcP, dstP)
@@ -88,8 +120,9 @@ def renameClip(projectName, newName, oldName):
 @app.route('/api/delete/<string:projectName>/<string:name>')
 @cross_origin(app)
 def deleteClip(projectName, name):
-    p = os.path.join(app.config["userData"], projectName, name)
-    print(p)
+    fileName = getFileName(projectName, name)
+    p = os.path.join(app.config["userData"], projectName, fileName)
     os.remove(p)
     print(name, "removed")
     return ("", 200)
+

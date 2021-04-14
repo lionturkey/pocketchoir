@@ -1,4 +1,5 @@
 import os
+import datetime
 
 def MacOSdirClean(l):
     newL = []
@@ -13,6 +14,11 @@ p = os.path.join(userData, projectIn)
 l = os.listdir(p)
 l = MacOSdirClean(l)
 l.sort()
+ts = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+a = "test"
+a = ts+a
+print(a[:14])
+
 
 
 
