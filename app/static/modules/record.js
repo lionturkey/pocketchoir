@@ -27,7 +27,14 @@ export function makeRecordTab(ctx) {
     };
 
     // button to switch to edit tab
-    editTab.onclick = () => { makeEditTab(ctx)}
+    editTab.onclick = () => {
+        // reset timer 
+        var timerDisplay = document.querySelector('.timer');
+        timerDisplay.innerHTML ='00:00:00:00';
+        document.getElementById("recordtab").className = "tab"
+        editTab.className += " active"
+        makeEditTab(ctx)
+    }
 
 }
 

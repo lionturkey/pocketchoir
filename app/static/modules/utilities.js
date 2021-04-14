@@ -264,6 +264,7 @@ export function stopPlaying(ctx) {
     console.log('in stopplaying');
     // Grab needed parts of the context
     var sourceNode = ctx['sourceNode']
+    // sourceNode.removeEventLisenter('ended');
     var audioContext = ctx["audioCtx"]
     if (sourceNode != null) {
         sourceNode.disconnect(audioContext.destination);

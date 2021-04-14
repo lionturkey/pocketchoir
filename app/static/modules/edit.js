@@ -43,7 +43,14 @@ export function makeEditTab(ctx) {
 
     mergeButt.onclick = () => (mergeSomething(ctx));
 
-    recordTab.onclick = () => (makeRecordTab(ctx));
+    recordTab.onclick = () => {
+        // reset timer
+        var timerDisplay = document.querySelector('.timer');
+        timerDisplay.innerHTML ='00:00:00:00';
+        document.getElementById("edittab").className = "tab"
+        recordTab.className += " active"
+        makeRecordTab(ctx)
+    };
 
 };
 

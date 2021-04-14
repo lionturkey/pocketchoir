@@ -1,14 +1,22 @@
 @media screen and (min-width: 480px) {
   /*CSS if screen size >= 480px*/
+  body {
+    /* background-color: #f1f1f1; */
+  }
 }
 
-body, h1 {
+html, body, h1 {
   font-family: Arial, Helvetica, sans-serif;
+}
+html, body {
+  height: 100%;
 }
 
 .content {
   max-width: 480px;
+  height: 100%;
   margin:auto;
+  /* background-color: white; */
 }
 
 button, #play, #record, #delete, #download {
@@ -27,9 +35,9 @@ button, #play, #record, #delete, #download {
   border: 1px solid #ccc;
   background-color: #f1f1f1;
   font-size: 5pt;
-  position: absolute;
-  bottom: 0px;
-  width: auto;
+  /* position: absolute; */
+  /* bottom: 0px; */
+  width: 100%;
 }
 
 .tabs button {
@@ -38,8 +46,9 @@ button, #play, #record, #delete, #download {
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 14px 16px;
+  padding: 8px 16px;
   transition: 0.3s;
+  width: 50%;
 }
 
 .tabs button:hover {
@@ -47,7 +56,8 @@ button, #play, #record, #delete, #download {
 }
 
 .tabs button.active {
-  background-color: #ccc;
+  color: white;
+  background-color:rgba(242, 118, 109, 1);
 }
 
 #stop {
@@ -72,7 +82,7 @@ input.clip-name[type=text], select {
 }
 
 input.login-input[type=text], select {
-  width: 100%;
+  width: 90%;
   padding: 12px 20px;
   margin: 5px 0;
   display: inline-block;
@@ -93,11 +103,26 @@ input[type='checkbox']:checked {
   background: #abd;
 }
 
+#control-panel {
+    -webkit-appearance: none;
+    /* position: absolute; */
+    /* bottom: 70px; */
+    /* left: calc(50% - 52.45px); */
+    width: 100%;
+    /* margin-top: 10px; */
+    padding: 10px 0px;
+    height: 132.67px;
+}
+
 #recordlist {
   -webkit-appearance:none;
   /* offset height of control panel and title */
-  height: calc(100% - 233.33px - 79.54px);
-  /* overflow-y: auto; */
+  height: calc(100% - 152.67px - 36.67px - 48px);
+  /* height: calc(100% - 112.67px - 36.67px - 48px); */
+  overflow-y: auto;
+  width: 100%;
+  /* position: relative; */
+  /* overflow: scroll; */
 }
 
 #merge, #login-button {
@@ -119,15 +144,18 @@ input[type='checkbox']:checked {
   font-size:19px;
 }
 
-#control-panel {
-  -webkit-appearance:none;
-  position: absolute;
-  bottom: 70px;
-  left: calc(50% - 105.45px);
-}
-
 body {
   -webkit-appearance:none;
   text-align: center;
 }
 
+
+
+button#login-button {
+    width: 90%;
+    margin: 5px 0;
+}
+
+body.vsc-initialized {
+    margin: 0px;
+}

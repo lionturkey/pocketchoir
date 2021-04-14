@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="/static/minireset.min.css">
+    <!-- <link rel="stylesheet" href="/static/minireset.min.css"> -->
     <link rel="stylesheet" href="/static/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PocketChoir</title>
@@ -23,19 +23,20 @@
             <div id="control-panel">
                 <div class="timer"></div>
                 <div id="row-1">
+                    <img id="delete" class="img " src="/static/images/delete_u5.svg"/>
                     <img id="record" class="img " src="/static/images/mic_background_u1.svg"/>
                     <img id="play" class="img " src="/static/images/play_u3.svg"/>
-                </div>
-                <div id="row-2">
-                    <img id="delete" class="img " src="/static/images/delete_u5.svg"/>
                     <img id="download" class="img " src="/static/images/download_u6.svg"/>
                 </div>
+                <!-- <div id="row-2">
+                    <img id="delete" class="img " src="/static/images/delete_u5.svg"/>
+                </div> -->
                 <div id="row-3">
                     <button type="button" id="merge">Merge</button>
                 </div>
             </div>  
             <div class="tabs">
-                <button type="button" class="tab" id="recordtab">Record</button>
+                <button type="button" class="tab active" id="recordtab">Record</button>
                 <button type="button" class="tab" id="edittab">Edit</button>
             </div>
         </div>
