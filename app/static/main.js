@@ -48,6 +48,7 @@ projectNameInput.addEventListener("keyup", function(event) {
 loginButt.onclick = function() {
     ctx["username"] = document.getElementById("username").value;
     ctx["project"] = projectNameInput.value;
+    document.getElementById("project-name").innerHTML = `<h3>${projectNameInput.value}</h3>`;
 
     if (ctx["username"] !== "" && ctx["project"] !== "") {
         initialLoad(ctx);

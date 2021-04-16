@@ -5,11 +5,15 @@
   }
 }
 
-html, body, h1 {
+html, body, h1, h3 {
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0px;
 }
 html, body {
   height: 100%;
+}
+h3 {
+  text-align: left;
 }
 
 .content {
@@ -117,7 +121,7 @@ input[type='checkbox']:checked {
 #recordlist {
   -webkit-appearance:none;
   /* offset height of control panel and title */
-  height: calc(100% - 152.67px - 36.67px - 48px);
+  height: calc(100% - 152.67px - 36.67px - 48px - 21.33px);
   /* height: calc(100% - 112.67px - 36.67px - 48px); */
   overflow-y: auto;
   width: 100%;
