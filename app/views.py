@@ -7,8 +7,8 @@ import datetime
 # app.config['CORS_HEADERS'] = 'Content-Type'
 # CORS(app)
 
-# app.config["userData"] = "/home/ubuntu/pocketchoir/app/Projects"
-app.config["userData"] = "/Users/Michael_wang/Documents/UM_Winter_2021/EECS441/pocketchoir/app/Projects"
+app.config["userData"] = "/home/ubuntu/pocketchoir/app/Projects"
+# app.config["userData"] = "/Users/Michael_wang/Documents/UM_Winter_2021/EECS441/pocketchoir/app/Projects"
 
 def nameManager(name, operation):
     # %y%m%d%H%M%S = YYYYMMDD + hour + minute + second, i.e. 20210414181602
