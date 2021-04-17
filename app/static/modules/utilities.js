@@ -159,17 +159,20 @@ export function deleteSomething(ctx) {
 
 export function downloadSomething(ctx) {
     // Grab needed parts of the context
-    var audioBufferArray = ctx["audioBufferArray"];
-    var audioNameArray = ctx["audioNameArray"];
+    // var audioBufferArray = ctx["audioBufferArray"];
+    // var audioNameArray = ctx["audioNameArray"];
 
-    for (let i = 0; i < audioBufferArray.length; ++i){
-        var idname = "box" + i;
-        // only process (play) checked items
-        // the count is an offest when you delete multiple at once
-        if (document.getElementById(idname).checked){
-            myDownload(ctx, audioBufferArray[i]);
-        }
-    }
+    var selectedBuffers = getSelectedBuffers(ctx);
+    myDownload(ctx, mergeAudio(ctx, selectedBuffers));
+
+    // for (let i = 0; i < audioBufferArray.length; ++i){
+    //     var idname = "box" + i;
+    //     // only process (play) checked items
+    //     // the count is an offest when you delete multiple at once
+    //     if (document.getElementById(idname).checked){
+    //         myDownload(ctx, audioBufferArray[i]);
+    //     }
+    // }
 }
 
 
@@ -273,66 +276,66 @@ export function stopPlaying(ctx) {
 }
 
 
-// function mergeAudio(ctx, buffers) {
-//     // Grab needed parts of the context
-//     var audioContext = ctx["audioCtx"];
-
-//     const output = audioContext.createBuffer(
-//         maxNumberOfChannels(buffers),
-//         buffers[0].sampleRate * maxDuration(buffers),
-//         buffers[0].sampleRate
-//     );
-    
-//     buffers.forEach((buffer) => {
-//         for (
-//             let channelNumber = 0;
-//             channelNumber < buffer.numberOfChannels;
-//             channelNumber += 1
-//         ) {
-//             const outputData = output.getChannelData(channelNumber);
-//             const bufferData = buffer.getChannelData(channelNumber);
-            
-//             for (
-//                 let i = buffer.getChannelData(channelNumber).length - 1;
-//                 i >= 0;
-//                 i -= 1
-//             ) {
-//                 outputData[i] += bufferData[i];
-//             }
-            
-//             output.getChannelData(channelNumber).set(outputData);
-//         }
-//     });
-//     return output;
-// }
-
-
 function mergeAudio(ctx, buffers) {
     // Grab needed parts of the context
     var audioContext = ctx["audioCtx"];
 
     const output = audioContext.createBuffer(
-        1,
+        maxNumberOfChannels(buffers),
         buffers[0].sampleRate * maxDuration(buffers),
         buffers[0].sampleRate
     );
     
     buffers.forEach((buffer) => {
-        const outputData = output.getChannelData(0);
-        const bufferData = buffer.getChannelData(0);
-        
         for (
-            let i = buffer.getChannelData(0).length - 1;
-            i >= 0;
-            i -= 1
+            let channelNumber = 0;
+            channelNumber < buffer.numberOfChannels;
+            channelNumber += 1
         ) {
-            outputData[i] += bufferData[i];
+            const outputData = output.getChannelData(channelNumber);
+            const bufferData = buffer.getChannelData(channelNumber);
+            
+            for (
+                let i = buffer.getChannelData(channelNumber).length - 1;
+                i >= 0;
+                i -= 1
+            ) {
+                outputData[i] += bufferData[i];
+            }
+            
+            output.getChannelData(channelNumber).set(outputData);
         }
-        
-        output.getChannelData(0).set(outputData);
     });
     return output;
 }
+
+
+// function mergeAudio(ctx, buffers) {
+//     // Grab needed parts of the context
+//     var audioContext = ctx["audioCtx"];
+
+//     const output = audioContext.createBuffer(
+//         1,
+//         buffers[0].sampleRate * maxDuration(buffers),
+//         buffers[0].sampleRate
+//     );
+    
+//     buffers.forEach((buffer) => {
+//         const outputData = output.getChannelData(0);
+//         const bufferData = buffer.getChannelData(0);
+        
+//         for (
+//             let i = buffer.getChannelData(0).length - 1;
+//             i >= 0;
+//             i -= 1
+//         ) {
+//             outputData[i] += bufferData[i];
+//         }
+        
+//         output.getChannelData(0).set(outputData);
+//     });
+//     return output;
+// }
 
 
 // server communication utilities
