@@ -134,6 +134,7 @@ input[type='checkbox']:checked {
 
 #sync {
     cursor: pointer;
+    padding-left: 82px;
 }
 
 #delete:hover,
