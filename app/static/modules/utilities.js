@@ -268,9 +268,16 @@ export function stopPlaying(ctx) {
     console.log('in stopplaying');
     // Grab needed parts of the context
     var sourceNode = ctx['sourceNode']
-    // sourceNode.removeEventLisenter('ended');
     var audioContext = ctx["audioCtx"]
     if (sourceNode != null) {
+        sourceNode.removeEventListener('ended', () => {
+            var playButt = document.getElementById("play");
+            if (playButt.style.display == "inline") {
+                playButt.src = "/static/images/play_u3.svg"
+                stopTimer();
+                makeEditTab(ctx); // reset tab
+            }
+        });
         sourceNode.disconnect(audioContext.destination);
     }
 }
