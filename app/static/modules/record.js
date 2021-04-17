@@ -1,5 +1,5 @@
 
-import { playGarbaj, addAudioBuffer, startTimer, stopTimer } from './utilities.js';
+import { playGarbaj, addAudioBuffer, startTimer, stopTimer, stopPlaying } from './utilities.js';
 import { makeEditTab } from './edit.js';
 
 export function makeRecordTab(ctx) {
@@ -69,6 +69,7 @@ function recorder(ctx) {
         // switch to image for record button
         recordButt.src = "/static/images/mic_background_u1.svg";
         mediaRecorder.stop();
+        stopPlaying(ctx);
         stopTimer();
 
         // without a short delay, addAudioBuffer can't
