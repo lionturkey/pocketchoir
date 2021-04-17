@@ -2,8 +2,9 @@
 // // Creating AudioContext to make audio buffers possible later on
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-import {makeRecordTab} from './modules/record.js'
-import {initialLoad} from './modules/utilities.js'
+import { makeEditTab } from './modules/edit.js';
+import { makeRecordTab} from './modules/record.js'
+import { initialLoad, checkboxManager } from './modules/utilities.js'
 
 var lagInterval = 100;
 var project = "upload-clip";
@@ -28,6 +29,7 @@ const ctx = {
 // start with project hidden
 var loginDiv = document.getElementById("login")
 var projectDiv = document.getElementById("project")
+var syncButton = document.getElementById("sync")
 projectDiv.style.display = "none";
 
 // upon login, go to recordTab
@@ -61,6 +63,13 @@ loginButt.onclick = function() {
 
         
     }
+}
+
+syncButton.onclick = function() {
+  console.log("syncing..")
+  initialLoad(ctx);
+  checkboxManager(ctx);
+  console.log("synced!")
 }
 
 navigator.mediaDevices.getUserMedia({ audio: {

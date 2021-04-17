@@ -37,7 +37,7 @@ function getShowTime() {
 }
 
 // update the checkboxes in the html document
-function checkboxManager(ctx) {
+export function checkboxManager(ctx) {
     console.log('checkbox manager start\n');
     // Grab needed parts of the context
     var audioNameArray = ctx["audioNameArray"];
