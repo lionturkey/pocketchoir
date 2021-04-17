@@ -62,7 +62,3 @@ function showEditTab() {
     document.getElementById("download").style.display = "inline";
     // document.getElementById("merge").style.display = "inline";
 };
-
-
-
-

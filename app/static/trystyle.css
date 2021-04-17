@@ -80,7 +80,7 @@ input[type="checkbox"]:hover {
 }
 
 input[type='checkbox']:checked {
-    background-color: rgba(242, 118, 109, 1);  
+    background-color: #f2766d;  
 }
 
 [type="checkbox"]:checked:after {
@@ -132,6 +132,28 @@ input[type='checkbox']:checked {
     display: none;
 }
 
+#sync {
+    cursor: pointer;
+}
+
+#play:hover,
+#record:hover,
+#delete:hover,
+#download:hover,
+#sync:hover {
+    transition: 0.3s;
+    filter:brightness(80%);
+}
+
+button:active,
+#play:active,
+#record:active,
+#delete:active,
+#download:active,
+#sync:active {
+    filter: brightness(110%);
+}
+
 button,
 #play,
 #record,
@@ -143,6 +165,7 @@ button,
     padding-left: 6px;
     padding-right: 6px;
 }
+
 
 .tabs button {
     background-color: inherit;
