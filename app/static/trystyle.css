@@ -1,0 +1,209 @@
+/* 1. Base */
+
+html {
+    font-family: "Quicksand", sans-serif;
+    font-size: 16px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1;
+    min-height: 100vh;
+    min-width: 300px;
+    overflow-x: hidden;
+    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* 2. Shared */
+
+.title {
+    font-size: xx-large;
+    font-weight: normal;
+    padding: 6px;
+}
+
+.content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-around;
+}
+
+#project {
+    align-items: center;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#topstuff {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.tabs {
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    font-size: 5pt;
+    width: 300px;
+}
+
+
+input[type='checkbox'] {
+    background:white;
+    border:2px solid #555;
+    border-radius:2px;
+    height:30px;
+    width:30px;
+}
+
+input[type='checkbox']:checked {
+    background: rgba(242, 118, 109, 1);
+}
+
+
+#control-panel {
+    align-items: center;
+    display: flex;
+    height: 140px;
+    padding: 10px 0px;
+    width: 100%;
+}
+
+#recordlist {
+    max-height: calc(100vh - 280px);
+    overflow-y: scroll;
+    padding: 5px;
+    width: 300px;
+}
+
+
+.botstuff {
+    display: flex;
+    flex-direction: column;
+}
+
+#control-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* 3. Specific */
+
+#project-name {
+    padding-bottom: 10px;
+}
+
+#stop,
+#stop-playing {
+    display: none;
+}
+
+button,
+#play,
+#record,
+#delete,
+#download {
+    cursor: pointer;
+    font-size: 400%;
+    margin: 0px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.tabs button {
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
+    float: left;
+    outline: none;
+    padding: 8px 16px;
+    transition: 0.3s;
+    width: 50%;
+}
+
+.tabs button:hover {
+    background-color: #ddd;
+}
+
+.tabs button.active {
+    background-color:rgba(242, 118, 109, 1);
+    color: white;
+}
+
+
+.trackbox {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+input.clip-name[type=text] {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 0px 0;
+    padding-left: 40px;
+    width: 170px;
+}
+
+input.clip-name[type=text],
+select {
+    border: none;
+}
+
+
+input.login-input[type=text],
+select {
+
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 5px 0;
+    padding: 12px 20px;
+    width: 90%;
+}
+
+
+#merge,
+#login-button {
+    background:inherit;
+    background-color:rgba(242, 118, 109, 1);
+    border:none;
+    border-radius:5px;
+    box-shadow:none;
+    border-width:0px;
+    color: white;
+    font-size:19px;
+    height:40px;
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+    width:140px;
+}
+
+
+button#login-button {
+    width: 90%;
+    margin: 5px 0;
+}
+
+
+#login {
+    justify-content: center;
+    position: relative;
+    width: 300px;
+}
+
+

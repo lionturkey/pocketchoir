@@ -48,14 +48,18 @@ projectNameInput.addEventListener("keyup", function(event) {
 loginButt.onclick = function() {
     ctx["username"] = document.getElementById("username").value;
     ctx["project"] = projectNameInput.value;
-    document.getElementById("project-name").innerHTML = `<h3>${projectNameInput.value}</h3>`;
-
+    document.getElementById("project-name").innerHTML = `${projectNameInput.value}`;
+  
     if (ctx["username"] !== "" && ctx["project"] !== "") {
         initialLoad(ctx);
         loginDiv.style.display = "none";
-        projectDiv.style.display = "inline";
+        projectDiv.style.display = "flex";
         
+        var recordTab = document.getElementById("recordtab");
+        recordTab.className += " active"
         makeRecordTab(ctx);
+
+        
     }
 }
 
