@@ -67,6 +67,9 @@ loginButt.onclick = function() {
 
 syncButton.onclick = function() {
   console.log("syncing..")
+  ctx.audioBufferArray = []
+  ctx.audioNameArray = []
+  ctx.selectedBuffers = []
   initialLoad(ctx);
   checkboxManager(ctx);
   console.log("synced!")
