@@ -86,6 +86,12 @@ node.addEventListener('ended', () => {
 })
 
 
+setTimeout(() => (node.removeEventListener('ended', () => {
+  time1 = performance.now();
+  console.log("source node took " + (time1 - time0) + " milliseconds.");
+  ctx["lagInt"] = (time1 - time0 - 700);
+  console.log("lag int is " + ctx["lagInt"]);
+})), 2000);
 
 
 syncButton.onclick = function() {
