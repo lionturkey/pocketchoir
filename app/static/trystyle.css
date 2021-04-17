@@ -24,7 +24,7 @@ body {
 .title {
     font-size: xx-large;
     font-weight: normal;
-    padding: 6px;
+    padding: 6px 0px;
 }
 
 .content {
