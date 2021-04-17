@@ -15,14 +15,15 @@ export function makeRecordTab(ctx) {
     // record button should play and record simultaneously
     recordButt.onclick = function() {
         console.log("Start recording");
-        playGarbaj(ctx);
+
+
         startTimer();
 
+        playGarbaj(ctx);
         // switch to image for StopRecord button
         recordButt.src = "/static/images/stop_u12.svg";
 
         // Create and start the mediarecorder
-        // TODO: add timer
         setTimeout(() => (recorder(ctx)), lagInterval);
     };
 

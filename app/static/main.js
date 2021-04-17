@@ -6,7 +6,7 @@ import { makeEditTab } from './modules/edit.js';
 import { makeRecordTab} from './modules/record.js'
 import { initialLoad, checkboxManager } from './modules/utilities.js'
 
-var lagInterval = 100;
+var lagInterval = 300;
 var project = "upload-clip";
 var globalSampleRate = 0;
 // var serverAddress = "http://127.0.0.1:5000/api";
@@ -64,6 +64,29 @@ loginButt.onclick = function() {
         
     }
 }
+
+
+var time0 = performance.now();
+// Create 1 second silent audio buffer
+var calibrationBuff = audioContext.createBuffer(1, audioContext.sampleRate, audioContext.sampleRate);
+var node = audioContext.createBufferSource();
+node.buffer = calibrationBuff;
+node.connect(audioContext.destination);
+
+// start timer and then start node
+var time1;
+node.start();
+
+// see how long it takes
+node.addEventListener('ended', () => {
+  time1 = performance.now();
+  console.log("source node took " + (time1 - time0) + " milliseconds.");
+  ctx["lagInt"] = (time1 - time0 - 700);
+  console.log("lag int is " + ctx["lagInt"]);
+})
+
+
+
 
 syncButton.onclick = function() {
   console.log("syncing..")
