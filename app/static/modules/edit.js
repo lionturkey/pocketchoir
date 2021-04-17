@@ -60,7 +60,7 @@ function showEditTab() {
     document.getElementById("play").style.display = "inline";
     document.getElementById("delete").style.display = "inline";
     document.getElementById("download").style.display = "inline";
-    document.getElementById("merge").style.display = "inline";
+    // document.getElementById("merge").style.display = "inline";
 };
 
 

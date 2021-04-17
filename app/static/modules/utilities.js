@@ -47,8 +47,9 @@ function checkboxManager(ctx) {
     var text = "";
     for (let i = 0; i < audioNameArray.length; ++i){
         var clipName = `<input type="text" id="name${i}" class="clip-name" value="${audioNameArray[i]}"/><br>\n`
-        var checkbox = `<input type="checkbox" checked="checked" id="box${i}" value="${i}"/><br>\n`
-        text += `<div class="clip"> ${clipName + checkbox} </div>`;
+        var checkbox = `<input type="checkbox" checked="checked" id="box${i}" value="${i}"/>`
+        checkbox += '<img class="trackimg" src="/static/images/track.png"/ width="235" height="30"><br>\n'
+        text += `<div class="clip"> ${clipName} <div class="trackbox"> ${checkbox} </div> </div>`;
     }
     var node = document.getElementById('recordlist');
     node.innerHTML = text;
