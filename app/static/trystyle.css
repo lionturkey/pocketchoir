@@ -136,8 +136,6 @@ input[type='checkbox']:checked {
     cursor: pointer;
 }
 
-#play:hover,
-#record:hover,
 #delete:hover,
 #download:hover,
 #sync:hover {
@@ -146,12 +144,21 @@ input[type='checkbox']:checked {
 }
 
 button:active,
-#play:active,
-#record:active,
 #delete:active,
 #download:active,
 #sync:active {
-    filter: brightness(110%);
+    filter: brightness(105%);
+}
+
+#play:hover,
+#record:hover {
+   transition: 0.3s;
+   filter:opacity(90%);
+}
+
+#play:active,
+#record:active {
+    filter:opacity(105%);
 }
 
 button,
