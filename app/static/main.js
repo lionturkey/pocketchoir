@@ -54,9 +54,9 @@ loginButt.onclick = function() {
     // if(ctx["username"] == "Janis"){
     //   ctx["lagInt"] = 290;
     // }
-    // if(ctx["username"] == "Leo"){
-    //   ctx["lagInt"] = 290;
-    // }
+    if(ctx["username"] == "Leo"){
+      ctx["lagInt"] = 270;
+    }
 
     document.getElementById("project-name").innerHTML = `${projectNameInput.value}`;
   
