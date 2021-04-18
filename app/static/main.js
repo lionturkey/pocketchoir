@@ -6,7 +6,7 @@ import { makeEditTab } from './modules/edit.js';
 import { makeRecordTab} from './modules/record.js'
 import { initialLoad, checkboxManager } from './modules/utilities.js'
 
-var lagInterval = 300;
+var lagInterval = 250;
 var project = "upload-clip";
 var globalSampleRate = 0;
 // var serverAddress = "http://127.0.0.1:5000/api";
@@ -50,6 +50,15 @@ projectNameInput.addEventListener("keyup", function(event) {
 loginButt.onclick = function() {
     ctx["username"] = document.getElementById("username").value;
     ctx["project"] = projectNameInput.value;
+
+    if(ctx["username"] == "Janis"){
+      ctx["lagInt"] = 250;
+    }
+    if(ctx["username"] == "Leo"){
+      ctx["lagInt"] = 250;
+    }
+
+
     document.getElementById("project-name").innerHTML = `${projectNameInput.value}`;
   
     if (ctx["username"] !== "" && ctx["project"] !== "") {
