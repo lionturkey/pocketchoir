@@ -82,16 +82,23 @@ node.buffer = calibrationBuff;
 // node.connect(audioContext.destination);
 
 // start timer and then start node
-var time1;
+node.connect(audioContext.destination);
+node.start();
+node.disconnect(audioContext.destination);
+var time1 = performance.now();
+ctx["lagInt"] = (time1 - time0);
+console.log("lag int is " + ctx["lagInt"]);
 
-setTimeout((() => {
-  node.connect(audioContext.destination);
-  node.start();
-  node.disconnect(audioContext.destination);
-  time1 = performance.now();
-  ctx["lagInt"] = (time1 - time0 - 700);
-  console.log("lag int is " + ctx["lagInt"]);
-}), 1000);
+
+
+// setTimeout((() => {
+//   node.connect(audioContext.destination);
+//   node.start();
+//   node.disconnect(audioContext.destination);
+//   time1 = performance.now();
+//   ctx["lagInt"] = (time1 - time0 - 700);
+//   console.log("lag int is " + ctx["lagInt"]);
+// }), 1000);
 
 //   time1 = performance.now();
 //   ctx["lagInt"] = (time1 - time0 - 700);
