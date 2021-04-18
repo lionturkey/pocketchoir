@@ -75,16 +75,26 @@ loginButt.onclick = function() {
 }
 
 
-// var time0 = performance.now();
-// // Create 1 second silent audio buffer
-// var calibrationBuff = audioContext.createBuffer(1, audioContext.sampleRate, audioContext.sampleRate);
-// var node = audioContext.createBufferSource();
-// node.buffer = calibrationBuff;
+var time0 = performance.now();
+// Create 1 second silent audio buffer
+var calibrationBuff = audioContext.createBuffer(1, audioContext.sampleRate, audioContext.sampleRate);
+var node = audioContext.createBufferSource();
+node.buffer = calibrationBuff;
 // node.connect(audioContext.destination);
 
-// // start timer and then start node
-// var time1;
-// node.start();
+// start timer and then start node
+var time1;
+node.start();
+
+setTimeout(() => {
+  time1 = performance.now();
+  ctx["lagInt"] = (time1 - time0 - 700);
+  console.log("lag int is " + ctx["lagInt"]);
+})
+
+//   time1 = performance.now();
+//   ctx["lagInt"] = (time1 - time0 - 700);
+//   console.log("lag int is " + ctx["lagInt"]);
 
 // // see how long it takes
 // node.addEventListener('ended', () => {
