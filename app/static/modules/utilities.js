@@ -278,7 +278,9 @@ export function stopPlaying(ctx) {
                 makeEditTab(ctx); // reset tab
             }
         });
-        sourceNode.disconnect(audioContext.destination);
+        if(sourceNode.numberOfOutputs != 0){
+            sourceNode.disconnect();
+        }
     }
 }
 
@@ -353,7 +355,17 @@ export async function initialLoad(ctx) {
     console.log("trying to fetch project info");
     var serverAddr = ctx["serverAddr"];
     var addr = serverAddr.concat('/get-info/').concat(project);
-    fetch(addr, {method:"GET"})
+
+    var myHeaders = new Headers();
+    myHeaders.append('pragma', 'no-cache');
+    myHeaders.append('cache-control', 'no-cache');
+
+    var myInit = {
+        method: 'GET',
+        headers: myHeaders,
+    };
+
+    fetch(addr, myInit)
         .then(res => {
             if (res.status != 200){
                 console.log('fail to obtain project info');

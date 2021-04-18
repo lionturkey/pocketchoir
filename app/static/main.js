@@ -6,7 +6,7 @@ import { makeEditTab } from './modules/edit.js';
 import { makeRecordTab} from './modules/record.js'
 import { initialLoad, checkboxManager } from './modules/utilities.js'
 
-var lagInterval = 290;
+// var lagInterval = 290;
 var project = "upload-clip";
 var globalSampleRate = 0;
 // var serverAddress = "http://127.0.0.1:5000/api";
@@ -21,15 +21,16 @@ const ctx = {
     username: "Tammy",
     audioCtx: audioContext,
     globalSR: globalSampleRate,
-    lagInt: lagInterval,
+    lagInt: 290,
     sourceNode: null,
     projectid: project,
 };
 
 // start with project hidden
-var loginDiv = document.getElementById("login")
-var projectDiv = document.getElementById("project")
-var syncButton = document.getElementById("sync")
+var loginDiv = document.getElementById("login");
+var projectDiv = document.getElementById("project");
+var syncButton = document.getElementById("sync");
+var delayBox = document.getElementById("delay");
 projectDiv.style.display = "none";
 
 // upon login, go to recordTab
@@ -51,12 +52,6 @@ loginButt.onclick = function() {
     ctx["username"] = document.getElementById("username").value;
     ctx["project"] = projectNameInput.value;
 
-    // if(ctx["username"] == "Janis"){
-    //   ctx["lagInt"] = 290;
-    // }
-    if(ctx["username"] == "Leo"){
-      ctx["lagInt"] = 270;
-    }
 
     document.getElementById("project-name").innerHTML = `${projectNameInput.value}`;
   
@@ -74,20 +69,20 @@ loginButt.onclick = function() {
 }
 
 
-var time0 = performance.now();
-// Create 1 second silent audio buffer
-var calibrationBuff = audioContext.createBuffer(1, audioContext.sampleRate, audioContext.sampleRate);
-var node = audioContext.createBufferSource();
-node.buffer = calibrationBuff;
-// node.connect(audioContext.destination);
+// var time0 = performance.now();
+// // Create 1 second silent audio buffer
+// var calibrationBuff = audioContext.createBuffer(1, audioContext.sampleRate, audioContext.sampleRate);
+// var node = audioContext.createBufferSource();
+// node.buffer = calibrationBuff;
+// // node.connect(audioContext.destination);
 
-// start timer and then start node
-node.connect(audioContext.destination);
-node.start();
-node.disconnect(audioContext.destination);
-var time1 = performance.now();
-ctx["lagInt"] = (time1 - time0);
-console.log("lag int is " + ctx["lagInt"]);
+// // start timer and then start node
+// node.connect(audioContext.destination);
+// node.start();
+// node.disconnect(audioContext.destination);
+// var time1 = performance.now();
+// ctx["lagInt"] = (time1 - time0);
+// console.log("lag int is " + ctx["lagInt"]);
 
 
 
@@ -132,6 +127,17 @@ syncButton.onclick = function() {
   checkboxManager(ctx);
   console.log("synced!")
 }
+
+
+delayBox.addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    ctx["lagInt"] = delayBox.value;
+    console.log("lag int is " + ctx["lagInt"]);
+    delayBox.value = ""
+  }
+});
+
 
 navigator.mediaDevices.getUserMedia({ audio: {
     // the below audio options prevent the recording from cutting in and out while there is playback

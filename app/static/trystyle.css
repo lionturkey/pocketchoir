@@ -123,7 +123,14 @@ input[type='checkbox']:checked {
 
 /* 3. Specific */
 
-#project-name {
+/* #project-name {
+    padding-bottom: 10px;
+
+} */
+
+#subhead {
+    display: flex;
+    justify-content: space-between;
     padding-bottom: 10px;
 }
 
