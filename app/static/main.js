@@ -86,11 +86,11 @@ node.buffer = calibrationBuff;
 var time1;
 node.start();
 
-setTimeout(() => {
+setTimeout((() => {
   time1 = performance.now();
   ctx["lagInt"] = (time1 - time0 - 700);
   console.log("lag int is " + ctx["lagInt"]);
-})
+}), 1000)
 
 //   time1 = performance.now();
 //   ctx["lagInt"] = (time1 - time0 - 700);
